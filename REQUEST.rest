@@ -1,7 +1,7 @@
 @host = http://localhost:3000
 
 ### Get all users   
-GET {{host}}/api/menus
+GET {{host}}/api/users
 
 ### Register a new user
 POST {{host}}/api/users/register
@@ -10,7 +10,22 @@ Content-Type: application/json
 {
     "name": "Andry",
     "password": "123456",
-    "email": "andry55@gmail.com",
+    "email": "andry5567@gmail.com",
     "phone": "1234567890",
     "surname": "Surname"
+}
+
+### // Get a menu with ID
+GET {{host}}/api/menus/id 
+
+### // Get all menus
+GET {{host}}/api/menus
+
+###
+POST {{host}}/api/menus
+Content-Type: application/json
+
+{
+    "id": 4,
+    "date": "2024-11-18"
 }

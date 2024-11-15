@@ -10,6 +10,6 @@ const registerUser = async (name, password, email, phone, surname) => {
 
 const getAllUsers = async () => {
     const [users] = await db.query('SELECT * FROM users');
-    return users;
+    return users || [];
 }
 module.exports = { registerUser, getAllUsers };
