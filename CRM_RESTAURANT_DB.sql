@@ -42,13 +42,13 @@ LOCK TABLES `dishes` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `menu_dishes`
+-- Table structure for table `menu_has_dishes`
 --
 
-DROP TABLE IF EXISTS `menu_dishes`;
+DROP TABLE IF EXISTS `menu_has_dishes`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `menu_dishes` (
+CREATE TABLE `menu_has_dishes` (
   `menus_id` int NOT NULL,
   `dishes_id` int NOT NULL,
   PRIMARY KEY (`menus_id`,`dishes_id`),
@@ -60,12 +60,12 @@ CREATE TABLE `menu_dishes` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `menu_dishes`
+-- Dumping data for table `menu_has_dishes`
 --
 
-LOCK TABLES `menu_dishes` WRITE;
-/*!40000 ALTER TABLE `menu_dishes` DISABLE KEYS */;
-/*!40000 ALTER TABLE `menu_dishes` ENABLE KEYS */;
+LOCK TABLES `menu_has_dishes` WRITE;
+/*!40000 ALTER TABLE `menu_has_dishes` DISABLE KEYS */;
+/*!40000 ALTER TABLE `menu_has_dishes` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -92,39 +92,13 @@ LOCK TABLES `menus` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `reservations`
+-- Table structure for table `reservation_has_tables`
 --
 
-DROP TABLE IF EXISTS `reservations`;
+DROP TABLE IF EXISTS `reservation_has_tables`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `reservations` (
-  `id` int NOT NULL,
-  `date` date NOT NULL,
-  `time` time NOT NULL,
-  `guests` int NOT NULL,
-  `status` enum('pending','confirmed','cancelled','completed') COLLATE utf8mb3_unicode_ci NOT NULL DEFAULT 'pending',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `reservations`
---
-
-LOCK TABLES `reservations` WRITE;
-/*!40000 ALTER TABLE `reservations` DISABLE KEYS */;
-/*!40000 ALTER TABLE `reservations` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `reservations_tables`
---
-
-DROP TABLE IF EXISTS `reservations_tables`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `reservations_tables` (
+CREATE TABLE `reservation_has_tables` (
   `reservations_id` int NOT NULL,
   `tables_id` int NOT NULL,
   `date` date NOT NULL,
@@ -138,12 +112,41 @@ CREATE TABLE `reservations_tables` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `reservations_tables`
+-- Dumping data for table `reservation_has_tables`
 --
 
-LOCK TABLES `reservations_tables` WRITE;
-/*!40000 ALTER TABLE `reservations_tables` DISABLE KEYS */;
-/*!40000 ALTER TABLE `reservations_tables` ENABLE KEYS */;
+LOCK TABLES `reservation_has_tables` WRITE;
+/*!40000 ALTER TABLE `reservation_has_tables` DISABLE KEYS */;
+/*!40000 ALTER TABLE `reservation_has_tables` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `reservations`
+--
+
+DROP TABLE IF EXISTS `reservations`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `reservations` (
+  `id` int NOT NULL,
+  `date` date NOT NULL,
+  `time` time NOT NULL,
+  `guests` int NOT NULL,
+  `status` enum('pending','confirmed','cancelled','completed') COLLATE utf8mb3_unicode_ci NOT NULL DEFAULT 'pending',
+  `users_id` int NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_reservations_users1_idx` (`users_id`),
+  CONSTRAINT `fk_reservations_users1` FOREIGN KEY (`users_id`) REFERENCES `users` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `reservations`
+--
+
+LOCK TABLES `reservations` WRITE;
+/*!40000 ALTER TABLE `reservations` DISABLE KEYS */;
+/*!40000 ALTER TABLE `reservations` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -157,8 +160,11 @@ CREATE TABLE `reviews` (
   `id` int NOT NULL,
   `rating` int NOT NULL,
   `comment` text COLLATE utf8mb3_unicode_ci NOT NULL,
+  `users_id` int NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `id_UNIQUE` (`id`)
+  UNIQUE KEY `id_UNIQUE` (`id`),
+  KEY `fk_reviews_users1_idx` (`users_id`),
+  CONSTRAINT `fk_reviews_users1` FOREIGN KEY (`users_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -213,14 +219,8 @@ CREATE TABLE `users` (
   `surname` varchar(100) COLLATE utf8mb3_unicode_ci NOT NULL,
   `phone` varchar(20) COLLATE utf8mb3_unicode_ci NOT NULL,
   `role` enum('admin','client') COLLATE utf8mb3_unicode_ci NOT NULL DEFAULT 'client',
-  `reservations_id` int NOT NULL,
-  `reviews_id` int NOT NULL,
-  PRIMARY KEY (`id`,`reservations_id`,`reviews_id`),
-  UNIQUE KEY `email_UNIQUE` (`email`),
-  KEY `fk_users_reservations1_idx` (`reservations_id`),
-  KEY `fk_users_reviews1_idx` (`reviews_id`),
-  CONSTRAINT `fk_users_reservations1` FOREIGN KEY (`reservations_id`) REFERENCES `reservations` (`id`),
-  CONSTRAINT `fk_users_reviews1` FOREIGN KEY (`reviews_id`) REFERENCES `reviews` (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `email_UNIQUE` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -242,4 +242,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-11-14 15:16:17
+-- Dump completed on 2024-11-15  9:37:47

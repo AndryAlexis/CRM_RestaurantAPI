@@ -8,7 +8,7 @@ app.use(cors());
 
 // Route configuration
 // Ex.
-app.use('/api', require('./routes/api/api.routes'));
+app.use('/api', require('./routes/api.routes'));
 
 // Error handler
 app.use((err, req, res, next) => {
