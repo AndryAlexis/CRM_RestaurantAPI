@@ -12,8 +12,15 @@ app.use('/api', require('./routes/api.routes'));
 
 // Error handler
 app.use((err, req, res, next) => {
-    console.error(err.stack)
-    res.status(500).json(err);
+    console.error('CUSTOM ERROR HANDLER: ', err.stack);
+
+    res
+        .status(err.status)
+        .json({
+            status: err.status,
+            title: err.title,
+            message: err.message
+        });
 })
 
 module.exports = app;

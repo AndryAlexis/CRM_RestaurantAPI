@@ -1,4 +1,5 @@
 @host = http://localhost:3000
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3MzE2NzM1MzV9.5jxz7gSvLmpOQ3p-ZHT769ZEmgUOtCWmRU-1LH9Y35M
 
 ### Get all users   
 GET {{host}}/api/menus
@@ -8,9 +9,22 @@ POST {{host}}/api/users/register
 Content-Type: application/json
 
 {
-    "name": "Andry",
-    "password": "123456",
-    "email": "andry55@gmail.com",
+    "name": "Alexis",
+    "password": "12345",
+    "email": "alexis@gmail.com",
     "phone": "1234567890",
-    "surname": "Surname"
+    "surname": "Reyes"
 }
+
+### Login a user
+POST {{host}}/api/users/login
+Content-Type: application/json
+
+{
+    "email": "alexis@gmail.com",
+    "password": "12345"
+}
+
+### Get all users   
+POST {{host}}/api/users/menu
+# Authorization: Bearer {{token}}
