@@ -1,7 +1,7 @@
 const { NotFoundError, BadRequestError } = require('../../errors/client.errors');
 const { registerUser, getUserByEmail } = require('../../models/api/users.models');
 const { httpCodes, httpStatus } = require('../../utils/serverStatus');
-const { generateToken, hasKeys } = require('../../utils/helpers');
+const { generateToken, hasKeys, verifyToken } = require('../../utils/helpers');
 const bcrypt = require('bcryptjs');
 
 const register = async (req, res, next) => {
@@ -15,7 +15,6 @@ const register = async (req, res, next) => {
 
         const token = generateToken({
             id: insertedUser.id,
-            role: insertedUser.role
         });
 
         res.status(httpCodes.CREATED).json({
@@ -24,6 +23,7 @@ const register = async (req, res, next) => {
             message: 'User registered successfully',
             token: token
         });
+
     } catch (error) {
         next(error);
     }
@@ -47,8 +47,8 @@ const login = async (req, res, next) => {
 
         const token = generateToken({
             id: user.id,
-            role: user.role
         });
+        console.log(verifyToken(token));
 
         res.status(httpCodes.OK).json({
             status: httpCodes.OK,
