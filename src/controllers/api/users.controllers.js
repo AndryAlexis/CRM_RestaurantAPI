@@ -6,6 +6,10 @@ const bcrypt = require('bcryptjs');
 
 const register = async (req, res, next) => {
     try {
+        const { hasAllKeys, missingKeys } = hasKeys(req.body, ['name', 'password', 'email', 'phone', 'surname']);
+        if (!hasAllKeys)
+            return next(new BadRequestError(`Missing keys: ${missingKeys.join(', ')}`));
+
         const { name, password, email, phone, surname } = req.body;
         const passwordHash = await bcrypt.hash(password, 10);
 

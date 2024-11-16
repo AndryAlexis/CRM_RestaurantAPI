@@ -1,245 +1,111 @@
--- MySQL dump 10.13  Distrib 8.0.38, for Win64 (x86_64)
---
--- Host: localhost    Database: crm_restaurante
--- ------------------------------------------------------
--- Server version	8.0.39
+DROP DATABASE IF EXISTS restaurant;
+CREATE DATABASE restaurant;
+USE restaurant;
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!50503 SET NAMES utf8 */;
-/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
-/*!40103 SET TIME_ZONE='+00:00' */;
-/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+DROP TABLE IF EXISTS user;
+CREATE TABLE user (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    email VARCHAR(255) UNIQUE,
+    name VARCHAR(64) NOT NULL,
+    surname VARCHAR(64) NOT NULL,
+    phone VARCHAR(20) NOT NULL,
+    role ENUM('admin', 'client') NOT NULL DEFAULT 'client'
+);
 
---
--- Table structure for table `dishes`
---
+DROP TABLE IF EXISTS review;
+CREATE TABLE review (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    rating INT NOT NULL,
+    comment TEXT NOT NULL,
+    user_id INT NOT NULL, 
+    FOREIGN KEY (user_id) REFERENCES user (id)
+);
 
-DROP TABLE IF EXISTS `dishes`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `dishes` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) COLLATE utf8mb3_unicode_ci NOT NULL,
-  `description` text COLLATE utf8mb3_unicode_ci NOT NULL,
-  `price` decimal(10,2) NOT NULL,
-  `image_url` varchar(255) COLLATE utf8mb3_unicode_ci NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS reservation;
+CREATE TABLE reservation (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    `date` DATE NOT NULL,
+    `time` ENUM('breakfast', 'lunch', 'dinner') NOT NULL,
+    guests INT NOT NULL,
+    status ENUM('pending', 'confirmed', 'cancelled', 'completed') NOT NULL DEFAULT 'confirmed',
+    user_id INT NOT NULL, 
+    FOREIGN KEY (user_id) REFERENCES user (id)
+);
 
---
--- Dumping data for table `dishes`
---
+DROP TABLE IF EXISTS `table`; 
+CREATE TABLE `table` (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    location ENUM('outside', 'inside'), 
+    number INT NOT NULL UNIQUE,
+    capacity INT NOT NULL,
+    status ENUM('available', 'ocupied', 'reserved', 'maintenance') NOT NULL DEFAULT 'available'
+);
 
-LOCK TABLES `dishes` WRITE;
-/*!40000 ALTER TABLE `dishes` DISABLE KEYS */;
-/*!40000 ALTER TABLE `dishes` ENABLE KEYS */;
-UNLOCK TABLES;
+DROP TABLE IF EXISTS reservation_has_table;
+CREATE TABLE reversation_has_table (
+    reservation_id INT NOT NULL,
+    table_id INT NOT NULL,
+    FOREIGN KEY (reservation_id) REFERENCES reservation (id),
+    FOREIGN KEY (table_id) REFERENCES `table` (id),
+    PRIMARY KEY(reservation_id, table_id),
 
---
--- Table structure for table `menu_has_dishes`
---
+    `date` DATE NOT NULL,
+    time ENUM('breakfast', 'lunch', 'dinner'),
+    UNIQUE (table_id, `date`, `time`)
+);
 
-DROP TABLE IF EXISTS `menu_has_dishes`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `menu_has_dishes` (
-  `menus_id` int NOT NULL,
-  `dishes_id` int NOT NULL,
-  PRIMARY KEY (`menus_id`,`dishes_id`),
-  KEY `fk_menus_has_dishes_dishes1_idx` (`dishes_id`),
-  KEY `fk_menus_has_dishes_menus1_idx` (`menus_id`),
-  CONSTRAINT `fk_menus_has_dishes_dishes1` FOREIGN KEY (`dishes_id`) REFERENCES `dishes` (`id`),
-  CONSTRAINT `fk_menus_has_dishes_menus1` FOREIGN KEY (`menus_id`) REFERENCES `menus` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS dish;
+CREATE TABLE dish (
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(255) NOT NULL UNIQUE,
+    description TEXT, 
+    price DECIMAL(5,2) NOT NULL,
+    image_url VARCHAR(255) NOT NULL
+);
 
---
--- Dumping data for table `menu_has_dishes`
---
+DROP TABLE IF EXISTS menu;
+CREATE TABLE menu (
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(100) UNIQUE, 
+    `date` DATE NOT NULL 
+);
 
-LOCK TABLES `menu_has_dishes` WRITE;
-/*!40000 ALTER TABLE `menu_has_dishes` DISABLE KEYS */;
-/*!40000 ALTER TABLE `menu_has_dishes` ENABLE KEYS */;
-UNLOCK TABLES;
+DROP TABLE IF EXISTS menu_has_dish;
+CREATE TABLE menu_has_dish (
+    menu_id INT NOT NULL,
+    dish_id INT NOT NULL,
+    FOREIGN KEY (menu_id) REFERENCES menu(id),
+    FOREIGN KEY (dish_id) REFERENCES dish(id),
+    PRIMARY KEY(menu_id, dish_id)
+);
 
---
--- Table structure for table `menus`
---
+---- EXTRA 
 
-DROP TABLE IF EXISTS `menus`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `menus` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `date` date NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS category;
+CREATE TABLE category (
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(100) NOT NULL UNIQUE, 
+    description TEXT,
+    type ENUM('Allergen') 
+);
 
---
--- Dumping data for table `menus`
---
+DROP TABLE IF EXISTS dish_has_category;
+CREATE TABLE dish_has_category (
+    dish_id INT NOT NULL,
+    category_id INT NOT NULL,
+    FOREIGN KEY (dish_id) REFERENCES dish(id),
+    FOREIGN KEY (category_id) REFERENCES category(id),
+    PRIMARY KEY(dish_id, category_id)
+);
 
-LOCK TABLES `menus` WRITE;
-/*!40000 ALTER TABLE `menus` DISABLE KEYS */;
-/*!40000 ALTER TABLE `menus` ENABLE KEYS */;
-UNLOCK TABLES;
 
---
--- Table structure for table `reservation_has_tables`
---
+DROP TABLE IF EXISTS menu_has_category;
+CREATE TABLE menu_has_category (
+    menu_id INT NOT NULL,
+    category_id INT NOT NULL,
+    FOREIGN KEY (menu_id) REFERENCES menu(id),
+    FOREIGN KEY (category_id) REFERENCES category(id),
+    PRIMARY KEY(menu_id, category_id)
+);
 
-DROP TABLE IF EXISTS `reservation_has_tables`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `reservation_has_tables` (
-  `reservations_id` int NOT NULL,
-  `tables_id` int NOT NULL,
-  `date` date NOT NULL,
-  `time` time NOT NULL,
-  PRIMARY KEY (`reservations_id`,`tables_id`),
-  KEY `fk_reservations_has_tables_tables1_idx` (`tables_id`),
-  KEY `fk_reservations_has_tables_reservations1_idx` (`reservations_id`),
-  CONSTRAINT `fk_reservations_has_tables_reservations1` FOREIGN KEY (`reservations_id`) REFERENCES `reservations` (`id`),
-  CONSTRAINT `fk_reservations_has_tables_tables1` FOREIGN KEY (`tables_id`) REFERENCES `tables` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `reservation_has_tables`
---
-
-LOCK TABLES `reservation_has_tables` WRITE;
-/*!40000 ALTER TABLE `reservation_has_tables` DISABLE KEYS */;
-/*!40000 ALTER TABLE `reservation_has_tables` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `reservations`
---
-
-DROP TABLE IF EXISTS `reservations`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `reservations` (
-  `id` int NOT NULL,
-  `date` date NOT NULL,
-  `time` time NOT NULL,
-  `guests` int NOT NULL,
-  `status` enum('pending','confirmed','cancelled','completed') COLLATE utf8mb3_unicode_ci NOT NULL DEFAULT 'pending',
-  `users_id` int NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk_reservations_users1_idx` (`users_id`),
-  CONSTRAINT `fk_reservations_users1` FOREIGN KEY (`users_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `reservations`
---
-
-LOCK TABLES `reservations` WRITE;
-/*!40000 ALTER TABLE `reservations` DISABLE KEYS */;
-/*!40000 ALTER TABLE `reservations` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `reviews`
---
-
-DROP TABLE IF EXISTS `reviews`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `reviews` (
-  `id` int NOT NULL,
-  `rating` int NOT NULL,
-  `comment` text COLLATE utf8mb3_unicode_ci NOT NULL,
-  `users_id` int NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `id_UNIQUE` (`id`),
-  KEY `fk_reviews_users1_idx` (`users_id`),
-  CONSTRAINT `fk_reviews_users1` FOREIGN KEY (`users_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `reviews`
---
-
-LOCK TABLES `reviews` WRITE;
-/*!40000 ALTER TABLE `reviews` DISABLE KEYS */;
-/*!40000 ALTER TABLE `reviews` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `tables`
---
-
-DROP TABLE IF EXISTS `tables`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `tables` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `number` int NOT NULL,
-  `capacity` int NOT NULL,
-  `status` enum('available','ocuped','reserved','maintenance') COLLATE utf8mb3_unicode_ci NOT NULL DEFAULT 'available',
-  `location` varchar(50) COLLATE utf8mb3_unicode_ci NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `number_UNIQUE` (`number`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `tables`
---
-
-LOCK TABLES `tables` WRITE;
-/*!40000 ALTER TABLE `tables` DISABLE KEYS */;
-/*!40000 ALTER TABLE `tables` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `users`
---
-
-DROP TABLE IF EXISTS `users`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `users` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `email` varchar(255) COLLATE utf8mb3_unicode_ci NOT NULL,
-  `password` varchar(255) COLLATE utf8mb3_unicode_ci NOT NULL,
-  `name` varchar(100) COLLATE utf8mb3_unicode_ci NOT NULL,
-  `surname` varchar(100) COLLATE utf8mb3_unicode_ci NOT NULL,
-  `phone` varchar(20) COLLATE utf8mb3_unicode_ci NOT NULL,
-  `role` enum('admin','client') COLLATE utf8mb3_unicode_ci NOT NULL DEFAULT 'client',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `email_UNIQUE` (`email`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `users`
---
-
-LOCK TABLES `users` WRITE;
-/*!40000 ALTER TABLE `users` DISABLE KEYS */;
-/*!40000 ALTER TABLE `users` ENABLE KEYS */;
-UNLOCK TABLES;
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
-
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-
--- Dump completed on 2024-11-15  9:37:47
+---

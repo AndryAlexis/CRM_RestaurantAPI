@@ -3,9 +3,10 @@ const db = require('../../config/db');
 const registerUser = async ({name, password, email, phone, surname}) => {
     const [response] = await db
         .query(
-            'INSERT INTO users (name, password, email, phone, surname) VALUES (?, ?, ?, ?, ?)',
+            'INSERT INTO user (name, password, email, phone, surname) VALUES (?, ?, ?, ?, ?)',
             [name, password, email, phone, surname]
         );
+
     if (response.insertId !== 0)
         return response;
     
@@ -13,12 +14,16 @@ const registerUser = async ({name, password, email, phone, surname}) => {
 };
 
 const getAllUsers = async () => {
-    const [users] = await db.query('SELECT * FROM users');
+    const [users] = await db.query('SELECT * FROM user');
+
+    if (users.length === 0)
+        return null;
+
     return users;
 }
 
 const getUserByEmail = async (email) => {
-    const [response] = await db.query('SELECT * FROM users WHERE email = ?', [email]);
+    const [response] = await db.query('SELECT * FROM user WHERE email = ?', [email]);
 
     if (response.length === 0)
         return null;

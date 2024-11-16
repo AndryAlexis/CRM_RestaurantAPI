@@ -5,19 +5,20 @@
 GET {{host}}/api/menus
 
 ### Register a new user
-POST {{host}}/api/users/register
+POST {{host}}/api/user/register
 Content-Type: application/json
 
 {
     "name": "Alexis",
+    "surname": "Reyes",
+    "phone": "1234567890",
     "password": "12345",
     "email": "alexis@gmail.com",
-    "phone": "1234567890",
-    "surname": "Reyes"
+    "role": "admin"
 }
 
 ### Login a user
-POST {{host}}/api/users/login
+POST {{host}}/api/user/login
 Content-Type: application/json
 
 {
