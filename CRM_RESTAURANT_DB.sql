@@ -74,6 +74,8 @@ DROP TABLE IF EXISTS menu_has_dish;
 CREATE TABLE menu_has_dish (
     menu_id INT NOT NULL,
     dish_id INT NOT NULL,
+    FOREIGN KEY (menu_id) REFERENCES menu(id),
+    FOREIGN KEY (dish_id) REFERENCES dish(id),
     PRIMARY KEY(menu_id, dish_id)
 );
 
