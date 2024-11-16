@@ -9,7 +9,7 @@ require('dotenv').config();
  * @returns {string} JWT token signed with the secret key from environment variables
  */
 const generateToken = ({ id }) => {
-    return jwt.sign({ id }, process.env.JWT_SECRET);
+    return jwt.sign({ id }, process.env.JWT_SECRET, { noTimestamp: true });
 }
 
 /**
@@ -38,4 +38,49 @@ const hasKeys = (obj, keys) => {
     };
 }
 
-module.exports = { generateToken, verifyToken, hasKeys };
+/**
+ * Checks if an object contains at least one of the specified keys
+ * @param {Object} obj - Object to check for keys
+ * @param {string[]} keys - Array of key names to check for
+ * @returns {Object} Result object containing:
+ *   - hasAtLeastOneKey {boolean}: true if at least one key exists, false if none exist
+ *   - missingKeys {string[]}: array of keys that were not found in the object
+ */
+const hasAtLeastOneKey = (obj, keys) => {
+    const missingKeys = keys.filter(key => !obj.hasOwnProperty(key));
+    return {
+        hasSomeKeys: missingKeys.length < keys.length,
+        missingKeys
+    };
+}
+
+/**
+ * Controls the length of a string by truncating or padding
+ * @param {string} str - The string to control length of
+ * @param {number} maxLength - Maximum allowed length
+ * @returns {boolean} True if string length is within the limit, false otherwise
+ */
+const isStringLengthValid = (str, maxLength) => {
+    return String(str.length) <= maxLength;
+}
+
+// Remove spaces from end and start from a string
+const removeSpaces = (str) => {
+    const string = String(str);
+    return string.trim();
+}
+
+// Check if a value is a number
+const isNumber = (value) => {
+    return !isNaN(value);
+}
+
+module.exports = { 
+    generateToken, 
+    verifyToken, 
+    hasKeys, 
+    hasAtLeastOneKey,
+    isStringLengthValid, 
+    removeSpaces,
+    isNumber
+};

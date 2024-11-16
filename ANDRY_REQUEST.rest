@@ -1,0 +1,39 @@
+@host = http://localhost:3000
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OH0.yOQO3Cc10UW4QX_ht_6tAeuBOX_HdIET89SoefQwaBA
+
+### Register a new user
+POST {{host}}/api/user/register
+Content-Type: application/json
+
+{
+    "name": "Alexis",
+    "surname": "Reyes",
+    "phone": "1234567890",
+    "password": "12345",
+    "email": "andry@gmail.com"
+}
+
+### Login a user
+POST {{host}}/api/user/login
+Content-Type: application/json
+
+{
+    "email": "andry@gmail.com",
+    "password": "12345"
+}
+
+### Update a user
+PUT {{host}}/api/user
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+    "name": "Alexis1",
+    "surname": "Reyes",
+    "phone": "1234567890",
+    "password": "12345"
+}
+
+### Delete a user
+DELETE {{host}}/api/user
+Authorization: {{token}}

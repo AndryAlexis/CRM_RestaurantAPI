@@ -14,7 +14,7 @@ class BadRequestError extends ClientError {
         super(message);
         this.status = 400;
         this.title = title;
-        this.description = message;
+        this.message = message;
     }
 }
 
@@ -26,7 +26,7 @@ class UnauthorizedError extends ClientError {
         super(message);
         this.status = 401;
         this.title = title;
-        this.description = message;
+        this.message = message;
     }
 }
 
@@ -38,7 +38,7 @@ class ForbiddenError extends ClientError {
         super(message);
         this.status = 403;
         this.title = title;
-        this.description = 'You do not have permission to access this resource';
+        this.message = 'You do not have permission to access this resource';
     }
 }
 
@@ -50,7 +50,7 @@ class NotFoundError extends ClientError {
         super(message);
         this.status = 404;
         this.title = title;
-        this.description = message;
+        this.message = message;
     }
 }
 
@@ -67,10 +67,36 @@ class ConflictError extends ClientError {
     }
 }
 
+class LengthError extends ClientError {
+    constructor(
+        message = 'The string length is invalid',
+        title = httpStatus[400] || 'Unknown Status'
+    ) {
+        super(message);
+        this.status = 400;
+        this.title = title;
+        this.message = message;
+    }
+}
+
+class TooManyRequestsError extends ClientError {
+    constructor(
+        message = 'Too many requests. Please try again later.',
+        title = httpStatus[429] || 'Unknown Status'
+    ) {
+        super(message);
+        this.status = 429;
+        this.title = title;
+        this.message = message;
+    }
+}
+
 module.exports = {
     BadRequestError,
     UnauthorizedError,
     ForbiddenError,
     NotFoundError,
     ConflictError,
+    LengthError,
+    TooManyRequestsError
 };

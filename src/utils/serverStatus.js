@@ -10,7 +10,8 @@ const httpStatus = {
     403: 'Forbidden',
     404: 'Not Found',
     409: 'Conflict',
-    
+    429: 'Too Many Requests',
+
     // Server error responses
     500: 'Internal Server Error',
     501: 'Not Implemented',
@@ -31,6 +32,8 @@ const httpCodes = {
     FORBIDDEN: 403,
     NOT_FOUND: 404,
     CONFLICT: 409,
+    TOO_MANY_REQUESTS: 429,
+
     // Server error responses
     INTERNAL_SERVER_ERROR: 500,
     NOT_IMPLEMENTED: 501,
