@@ -1,16 +1,17 @@
 @host = http://localhost:3000
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OH0.yOQO3Cc10UW4QX_ht_6tAeuBOX_HdIET89SoefQwaBA
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiY2xpZW50In0.hxOv1OBToXPH8ObHlGjl-4S1S62rCIz2XRZeisZ4zyo
+@tokenAdmin = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjEsInJvbGUiOiJhZG1pbiJ9.OpkP666aKDaMEhwdcpLEVnc77A9xZfBHQMMUsUAzC5I
 
 ### Register a new user
-POST {{host}}/api/user/register
+POST {{host}}/api/user
 Content-Type: application/json
 
 {
-    "name": "Alexis",
-    "surname": "Reyes",
-    "phone": "1234567890",
+    "name": "Joel Ricardo",
+    "surname": "Reyes Cruz",
+    "phone": "637398857",
     "password": "12345",
-    "email": "andry@gmail.com"
+    "email": "joelricardo.rc@gmail.com"  
 }
 
 ### Login a user
@@ -18,9 +19,17 @@ POST {{host}}/api/user/login
 Content-Type: application/json
 
 {
-    "email": "andry@gmail.com",
+    "email": "andry.html@gmail.com",
     "password": "12345"
 }
+
+### Get a user
+GET {{host}}/api/user/21
+Authorization: {{token}}
+
+### Get all users
+GET {{host}}/api/user?page=1&limit=2&order=desc
+Authorization: {{tokenAdmin}}
 
 ### Update a user
 PUT {{host}}/api/user
@@ -30,8 +39,7 @@ Authorization: {{token}}
 {
     "name": "Alexis1",
     "surname": "Reyes",
-    "phone": "1234567890",
-    "password": "12345"
+    "phone": "1234567890"
 }
 
 ### Delete a user

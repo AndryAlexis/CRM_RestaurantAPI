@@ -11,10 +11,5 @@ POST {{host}}/api/menus
 Content-Type: application/json
 
 {
-    "dishes":[
-        1, 5, 15
-        
-    ], 
-    "date": "2024-11-19",
-    "name": "menu lunes"
-    }
+    "date": "2024-11-18"
+}

@@ -10,17 +10,28 @@ const { hasKeys, hasAtLeastOneKey, isNumber, verifyToken } = require('../utils/h
  * @throws {ForbiddenError} If user is not an admin
  */
 const isAdmin = (req, _, next) => {
-    // Extract user from request
-    const { user } = req;
+    // Extract token from request headers
+    const token = req.headers.authorization;
+
+    // Verify JWT token
+    const { role } = verifyToken(token);
 
     // Check if user has admin privileges
-    if (user.type !== 'admin') {
-        next(new ForbiddenError());
+    if (role !== 'admin') {
+        return next(new ForbiddenError());
     }
 
     // User is admin, continue to next middleware
     next();
 };
+
+const idIsNumber = (req, _, next) => {
+    const { id } = req.params;
+    if (!isNumber(id)) {
+        return next(new BadRequestError('ID must be a number'));
+    }
+    next();
+}
 
 /**
  * Middleware to check if a user exists in the database
@@ -52,7 +63,11 @@ const userExistsByEmail = async (req, _, next) => {
 const userExistsByTokenId = async (req, _, next) => {
     // Extract ID from request parameters
     const token = req.headers.authorization;
+
+    // Verify JWT token
     const decodedToken = verifyToken(token);
+
+    // Get user ID from verified token
     const { id } = decodedToken;
 
     // Try to find user with provided ID
@@ -135,10 +150,20 @@ const removeSpacesOfBody = (keys = []) => {
  * @throws {UnauthorizedError} If no token is present in request headers
  */
 const hasToken = (req, _, next) => {
+    // Extract token from request headers
     const token = req.headers.authorization;
+
+    // Check if token is present
     if (!token) {
-        next(new UnauthorizedError());
+        return next(new UnauthorizedError('Token is required'));
     }
+
+    // Check if token is valid
+    if (!verifyToken(token)) {
+        return next(new UnauthorizedError('Invalid token'));
+    }
+
+    // Token is valid, continue to next middleware
     next();
 }
 
@@ -149,5 +174,6 @@ module.exports = {
     hasOptionalBodyKeys, 
     removeSpacesOfBody,
     userExistsByTokenId,
-    hasToken
+    hasToken,
+    idIsNumber
 };

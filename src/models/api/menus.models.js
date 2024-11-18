@@ -32,12 +32,8 @@ const selectAll = async () => {
     return menusWithDishes;
 }
 
-const createMenu = async (date, name, dishes) => {
-    const [result] = await pool.query('INSERT INTO menu (date, name) VALUES (?, ?)', [date, name]);
-    const menuId = result.insertId;
-    for (const dish_id of dishes) {
-        await pool.query('INSERT INTO menu_has_dish (menu_id, dish_id) VALUES (?, ?)', [menuId, dish_id]);
-    }
+const createMenu = async (date) => {
+    const [result] = await pool.query('INSERT INTO menu (date) VALUES (?)', [date]);
     return result;
 
 }

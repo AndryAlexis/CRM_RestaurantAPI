@@ -8,8 +8,8 @@ require('dotenv').config();
  * @param {string} payload.role - User role to encode in token
  * @returns {string} JWT token signed with the secret key from environment variables
  */
-const generateToken = ({ id }) => {
-    return jwt.sign({ id }, process.env.JWT_SECRET, { noTimestamp: true });
+const generateToken = ({ id, role }) => {
+    return jwt.sign({ id, role }, process.env.JWT_SECRET, { noTimestamp: true });
 }
 
 /**
@@ -19,7 +19,11 @@ const generateToken = ({ id }) => {
  * @throws {JsonWebTokenError} If token is invalid or expired
  */
 const verifyToken = (token) => {
-    return jwt.verify(token, process.env.JWT_SECRET);
+    try {
+        return jwt.verify(token, process.env.JWT_SECRET);
+    } catch (error) {
+        return null;
+    }
 }
 
 /**

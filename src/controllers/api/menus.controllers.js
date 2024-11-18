@@ -20,10 +20,10 @@ const getAll = async (req, res, next) => {
 }
 
 const generateMenu = async (req, res, next) => {
-    const { date, name, dishes } = req.body;
+    const { date } = req.body;
 
     try {
-        const newMenu = await createMenu(date, name, dishes);
+        const newMenu = await createMenu(date);
         if (!newMenu === 0) { // Si no se pudo crear el menu error
             return res.status(500).json({ message: 'Error creating menu' });
         }
