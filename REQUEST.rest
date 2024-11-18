@@ -1,7 +1,7 @@
 @host = http://localhost:3000
 
 ### // Get a menu with ID
-GET {{host}}/api/menus/id 
+GET {{host}}/api/menus/18
 
 ### // Get all menus
 GET {{host}}/api/menus
@@ -11,6 +11,10 @@ POST {{host}}/api/menus
 Content-Type: application/json
 
 {
-    "id": 4,
-    "date": "2024-11-18"
-}
+    "dishes":[
+        1, 5, 15
+        
+    ], 
+    "date": "2024-11-19",
+    "name": "menu lunes"
+    }

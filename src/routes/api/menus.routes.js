@@ -5,7 +5,7 @@ const { getById, getAll, generateMenu } = require('../../controllers/api/menus.c
 
 router.get('/:menuId', getById);
 router.get('/', getAll);
-router.post('/menus', generateMenu);
+router.post('/', generateMenu);
 
 
 
