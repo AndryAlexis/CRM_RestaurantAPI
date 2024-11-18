@@ -36,7 +36,7 @@ const getUserByEmail = async (email) => {
     );
 
     // Return first matching user or null if none found
-    return response.length ? response[0] : null;
+    return response.length > 0 ? response[0] : null;
 };
 
 /**
@@ -53,7 +53,25 @@ const getUserById = async (id) => {
     );
 
     // Return first matching user or null if none found
-    return response.length ? response[0] : null;
+    return response.length > 0 ? response[0] : null;
+}
+
+/**
+ * Get all users from the database
+ * @returns {Promise<Array|null>} Array of user objects if found, null if no users exist
+ * @description Retrieves all user records from database - be careful with data exposure
+ */
+const getAllUsers = async (page, limit, order) => {
+    // Calculate offset based on page and limit
+    const offset = (page - 1) * limit;
+    // Corrected SQL query with ORDER BY before LIMIT and OFFSET
+    const [response] = await db.query(
+        `SELECT * FROM user ORDER BY id ${order} LIMIT ? OFFSET ?`, 
+        [limit, offset]
+    );
+
+    // Return array of users if any exist, otherwise null
+    return response.length > 0 ? response : null;
 }
 
 /**
@@ -117,7 +135,6 @@ const deleteUserById = async (id) => {
         'DELETE FROM user WHERE id = ?',
         [id]
     );
-    console.log(response);
 
     // Return true if a row was deleted, false if no user was found
     return response.affectedRows > 0;
@@ -129,5 +146,6 @@ module.exports = {
     getUserByEmail,
     updateUserById,
     getUserById,
-    deleteUserById
+    deleteUserById,
+    getAllUsers
 };

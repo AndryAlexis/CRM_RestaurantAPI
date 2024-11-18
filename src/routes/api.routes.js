@@ -5,7 +5,7 @@ const { httpCodes, httpStatus } = require('../utils/serverStatus');
 
 router.use(rateLimiter);
 
-router.use('/', require('./api/menus.routes'));
+router.use('/menus', require('./api/menus.routes'));
 router.use('/user', require('./api/user.routes'));
 
 // Catch any undefined routes
@@ -16,6 +16,5 @@ router.use('*', (req, res) => {
         message: `Cannot ${req.method} ${req.originalUrl}`
     });
 });
-
 
 module.exports = router;

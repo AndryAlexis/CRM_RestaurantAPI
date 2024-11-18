@@ -10,8 +10,8 @@ const selectAll = async () => {
     return result;
 }
 
-const createMenu = async (id, date) => {
-    const [result] = await pool.query('INSERT INTO menus (id, date) VALUES (?, ?)', [id, date]);
+const createMenu = async (date) => {
+    const [result] = await pool.query('INSERT INTO menu (date) VALUES (?)', [date]);
     return result;
 
 }
