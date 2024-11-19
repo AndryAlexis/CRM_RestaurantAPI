@@ -6,17 +6,14 @@ const {
     update, 
     deleteUser, 
     getUser, 
-    getUsers 
-} = require('../../controllers/api/users.controllers');
+} = require('../../controllers/api/user.controllers');
 const { 
-    isAdmin, 
     userExistsByEmail, 
     hasRequiredBodyKeys, 
     hasOptionalBodyKeys, 
     removeSpacesOfBody, 
     userExistsByTokenId,
-    hasToken,
-    idIsNumber
+    hasToken
 } = require('../../middlewares/auth');
 
 // Required fields for user registration
@@ -52,25 +49,12 @@ router.post(
     login
 );
 
-// Get all users
-// 1. Verify JWT token is present and valid
-// 2. Verify user is admin
-// 3. Verify user exists by token ID
-router.get(
-    '/', 
-    hasToken,
-    isAdmin,
-    userExistsByTokenId,
-    getUsers
-);
-
 // Get user profile
 // 1. Verify JWT token is present and valid
 // 2. Verify user exists by token ID
 router.get(
-    '/:id', 
+    '/', 
     hasToken, 
-    idIsNumber,
     userExistsByTokenId, 
     getUser
 );

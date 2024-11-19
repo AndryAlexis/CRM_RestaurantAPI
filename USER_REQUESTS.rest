@@ -1,0 +1,45 @@
+@host = http://localhost:3000
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mzh9.XNQRe38RnFVb0jdU-1gkjyX6cq821lcKWCwAhYhQo1g
+
+### Client endpoints
+
+### Get user profile
+GET {{host}}/api/user
+Authorization: {{token}}
+
+### Register user
+POST {{host}}/api/user
+Content-Type: application/json
+
+{
+    "name": "Cabezon",
+    "surname": "Reyes Garcia",
+    "phone": "637398857",
+    "password": "12345",
+    "email": "cabezon.rg@gmail.com"  
+}
+
+### Login user
+POST {{host}}/api/user/login
+Content-Type: application/json
+
+{
+    "email": "andry.html@gmail.com",
+    "password": "12345"
+}
+
+### Update a user
+PUT {{host}}/api/user
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+    "name": "Alma Joel",
+    "surname": "Reyes Garcia",
+    "phone": "637398857"
+}
+
+### Delete a user
+DELETE {{host}}/api/user
+Authorization: {{token}}
+

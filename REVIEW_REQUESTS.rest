@@ -1,0 +1,14 @@
+@host = http://localhost:3000
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mzl9.65TmlVoYYlxmeSC4rBSoa7ewBKzutQQ_Npnv8__AX14
+
+### Reviews endpoints
+
+### Create a review
+POST {{host}}/api/review
+Authorization: {{token}}
+Content-Type: application/json
+
+{
+    "rating": 5,
+    "comment": "Esto es una prueba ah review"
+}
