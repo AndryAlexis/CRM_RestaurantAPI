@@ -1,5 +1,5 @@
 @host = http://localhost:3000
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mzh9.XNQRe38RnFVb0jdU-1gkjyX6cq821lcKWCwAhYhQo1g
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDB9.W4aqvh53FH9sBstAn6kDt0FOf4WIMWemFIpmaavsOus
 
 ### Client endpoints
 
@@ -24,7 +24,7 @@ POST {{host}}/api/user/login
 Content-Type: application/json
 
 {
-    "email": "andry.html@gmail.com",
+    "email": "cabezon.rg@gmail.com",
     "password": "12345"
 }
 
@@ -42,4 +42,3 @@ Authorization: {{token}}
 ### Delete a user
 DELETE {{host}}/api/user
 Authorization: {{token}}
-

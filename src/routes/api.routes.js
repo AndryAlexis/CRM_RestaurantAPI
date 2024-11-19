@@ -6,6 +6,7 @@ const { hasToken, userExistsByTokenId, isAdmin } = require('../middlewares/auth'
 
 router.use(rateLimiter);
 
+// /api/
 router.use('/menus', require('./api/menus.routes'));
 router.use('/user', require('./api/user.routes'));
 router.use('/reservations', require('./api/reservations.routes'));
