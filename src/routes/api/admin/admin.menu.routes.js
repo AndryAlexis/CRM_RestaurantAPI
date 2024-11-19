@@ -10,9 +10,10 @@ const {
 
 const { updateById, deleteMenu, getAll, getById, generateMenu } = require('../../../controllers/api/admin/admin.menus.controllers');
 
+router.get('/', getAll);
 router.get('/:menuId', getById);
 
-router.post(
+router.put(
     '/:menuId', updateById
 )
 
@@ -21,9 +22,8 @@ router.delete(
 )
 
 
-router.get('/', getAll);
 
 router.post('/', generateMenu);
 
 
-module.exports = router;
+module.exports = router

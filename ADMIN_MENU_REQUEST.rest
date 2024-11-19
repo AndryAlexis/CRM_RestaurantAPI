@@ -6,11 +6,13 @@ GET {{host}}/api/admin/menu/25
 Authorization: {{token}}
 
 ### // Get all menus
-GET {{host}}/api/menus
+GET {{host}}/api/admin/menu?order=desc&page=1&limit=10
+Authorization: {{token}}
 
 ###  // Create menu
-POST {{host}}/api/menus
+POST {{host}}/api/admin/menu
 Content-Type: application/json
+Authorization: {{token}}
 
 {
     "dishes":[
@@ -18,17 +20,19 @@ Content-Type: application/json
         
     ], 
     "date": "2024-11-21",
-    "name": "menu martes"
+    "name": "menu viernes"
     }
 
 ###  // Delete a menu with his ID
-DELETE {{host}}/api/menus/24
+DELETE {{host}}/api/admin/menu/25
+Authorization: {{token}}
 
 ###
-PUT {{host}}/api/menus/25
+PUT {{host}}/api/admin/menu/26
+Authorization: {{token}}
 Content-Type: application/json
 
 {
-    "name": "menu miercoles",
-    "date": "2024-11-19"
+    "name": "menu sabado",
+    "date": "2024-11-21"
 }

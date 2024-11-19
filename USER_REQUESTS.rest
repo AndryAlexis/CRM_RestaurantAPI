@@ -12,11 +12,11 @@ POST {{host}}/api/user
 Content-Type: application/json
 
 {
-    "name": "Charly",
+    "name": "Charlyyy",
     "surname": "Reyes Garcia",
     "phone": "637398857",
     "password": "12345",
-    "email": "charly@gmail.com"  
+    "email": "charlyyy@gmail.com"  
 }
 
 ### Login user

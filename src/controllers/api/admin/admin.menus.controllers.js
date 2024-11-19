@@ -106,10 +106,10 @@ const deleteMenu = async (req, res, next) => {
     try {
         const menuId = req.params.menuId;
         // Step 2: Retrieve the authorization token from the request headers.
-        // const token = req.headers.authorization;
+        const token = req.headers.authorization;
         // Step 3: Verify the token to decode the user's information and retrieve their ID.
-        // const decodedToken = verifyToken(token);
-        // const { id } = decodedToken;
+        const decodedToken = verifyToken(token);
+        const { id } = decodedToken;
         // Step 4: Attempt to delete the menu using the user's ID.
         // Call 'deleteUserById' function to delete the menu associated with the user.
         const deletedMenu = await deleteMenuById(menuId);
@@ -141,6 +141,9 @@ const updateById = async (req, res, next) => {
     try {
         // Extract 'menuId' from the route parameters (req.params)
         const menuId = req.params.menuId;
+        const token = req.headers.authorization;
+        const decodedToken = verifyToken(token);
+        const { id } = decodedToken;
         // Call the 'updateMenuById' function to update the menu in the database using the menuId and request body
         const updatedMenu = await updateMenuById(menuId, req.body);
         // If the menu update fails (i.e., no menu was updated), pass a BadRequestError to the next middleware

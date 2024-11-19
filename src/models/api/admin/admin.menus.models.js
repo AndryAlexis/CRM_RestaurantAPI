@@ -11,14 +11,10 @@ const selectById = async (id) => {
         // Query the 'dish' table to get the details of the dish by its ID.
         const [resultDish] = await db.query('SELECT * FROM dish WHERE id = ?', [dish.dish_id]);
         // Add the fetched dish details to the 'dishes' array.
-        dishes.push(resultDish);
+        dishes = [...dishes, ...resultDish];
     };
-    // Step 4: Attach the list of dishes to the menu object.
-    const menu = result;
-    // Assign the 'dishes' array to the menu object as its 'dishes' property.
-    menu.dishes = dishes;
     // Return the complete menu object with its associated dishes.
-    return menu;
+    return [result[0], dishes];
 }
 
 const selectAll = async (page, limit, order) => {
