@@ -1,14 +1,17 @@
-const httpStatusCodes = require('../utils/serverStatus');
+const { httpStatus, httpCodes } = require('../utils/serverStatus');
 
 /**
  * Base class for all server-related errors
  * Provides common error handling functionality with HTTP status codes
  */
 class ServerError extends Error {
-    constructor(message = 'Server Error') {
+    constructor(
+        message = 'Server Error',
+        title = httpStatus[httpCodes.INTERNAL_SERVER_ERROR] || 'Unknown Status'
+    ) {
         super(message);
         this.status = 500;
-        this.title = httpStatusCodes[this.status] || 'Unknown Status';
+        this.title = title;
         this.description = 'The server encountered an unexpected condition that prevented it from fulfilling the request';
     }
 }
@@ -18,10 +21,13 @@ class ServerError extends Error {
  * HTTP Status Code: 400
  */
 class BadRequestError extends ServerError {
-    constructor(message = 'Bad Request') {
+    constructor(
+        message = 'Bad Request',
+        title = httpStatus[httpCodes.BAD_REQUEST] || 'Unknown Status'
+    ) {
         super(message);
         this.status = 400;
-        this.title = httpStatusCodes[this.status] || 'Unknown Status';
+        this.title = title;
         this.description = 'The request could not be understood by the server due to malformed syntax';
     }
 }
@@ -31,10 +37,13 @@ class BadRequestError extends ServerError {
  * HTTP Status Code: 401
  */
 class UnauthorizedError extends ServerError {
-    constructor(message = 'Unauthorized') {
-        super(message, 401);
+    constructor(
+        message = 'Unauthorized',
+        title = httpStatus[httpCodes.UNAUTHORIZED] || 'Unknown Status'
+    ) {
+        super(message);
         this.status = 401;
-        this.title = httpStatusCodes[this.status] || 'Unknown Status';
+        this.title = title;
         this.description = 'The request requires user authentication';
     }
 }
@@ -44,10 +53,13 @@ class UnauthorizedError extends ServerError {
  * HTTP Status Code: 403
  */
 class ForbiddenError extends ServerError {
-    constructor(message = 'Forbidden') {
-        super(message, 403);
+    constructor(
+        message = 'Forbidden',
+        title = httpStatus[httpCodes.FORBIDDEN] || 'Unknown Status'
+    ) {
+        super(message);
         this.status = 403;
-        this.title = httpStatusCodes[this.status] || 'Unknown Status';
+        this.title = title;
         this.description = 'You do not have permission to access this resource';
     }
 }
@@ -57,10 +69,13 @@ class ForbiddenError extends ServerError {
  * HTTP Status Code: 404
  */
 class NotFoundError extends ServerError {
-    constructor(message = 'Not Found') {
-        super(message, 404);
+    constructor(
+        message = 'Not Found',
+        title = httpStatus[httpCodes.NOT_FOUND] || 'Unknown Status'
+    ) {
+        super(message);
         this.status = 404;
-        this.title = httpStatusCodes[this.status] || 'Unknown Status';
+        this.title = title;
         this.description = 'The requested resource could not be found on this server';
     }
 }
@@ -70,10 +85,13 @@ class NotFoundError extends ServerError {
  * HTTP Status Code: 500
  */
 class InternalServerError extends ServerError {
-    constructor(message = 'Internal Server Error') {
-        super(message, 500);
+    constructor(
+        message = 'Internal Server Error',
+        title = httpStatus[httpCodes.INTERNAL_SERVER_ERROR] || 'Unknown Status'
+    ) {
+        super(message);
         this.status = 500;
-        this.title = httpStatusCodes[this.status] || 'Unknown Status';
+        this.title = title;
         this.description = 'The server encountered an unexpected condition that prevented it from fulfilling the request';
     }
 }
@@ -83,10 +101,13 @@ class InternalServerError extends ServerError {
  * HTTP Status Code: 502
  */
 class BadGatewayError extends ServerError {
-    constructor(message = 'Bad Gateway') {
-        super(message, 502);
+    constructor(
+        message = 'Bad Gateway',
+        title = httpStatus[httpCodes.BAD_GATEWAY] || 'Unknown Status'
+    ) {
+        super(message);
         this.status = 502;
-        this.title = httpStatusCodes[this.status] || 'Unknown Status';
+        this.title = title;
         this.description = 'The server received an invalid response from the upstream server';
     }
 }
@@ -96,10 +117,13 @@ class BadGatewayError extends ServerError {
  * HTTP Status Code: 503
  */
 class ServiceUnavailableError extends ServerError {
-    constructor(message = 'Service Unavailable') {
-        super(message, 503);
+    constructor(
+        message = 'Service Unavailable',
+        title = httpStatus[httpCodes.SERVICE_UNAVAILABLE] || 'Unknown Status'
+    ) {
+        super(message);
         this.status = 503;
-        this.title = httpStatusCodes[this.status] || 'Unknown Status';
+        this.title = title;
         this.description = 'The server is currently unable to handle the request due to temporary overloading or maintenance';
     }
 }
@@ -109,10 +133,13 @@ class ServiceUnavailableError extends ServerError {
  * HTTP Status Code: 504
  */
 class GatewayTimeoutError extends ServerError {
-    constructor(message = 'Gateway Timeout') {
-        super(message, 504);
+    constructor(
+        message = 'Gateway Timeout',
+        title = httpStatus[httpCodes.GATEWAY_TIMEOUT] || 'Unknown Status'
+    ) {
+        super(message);
         this.status = 504;
-        this.title = httpStatusCodes[this.status] || 'Unknown Status';
+        this.title = title;
         this.description = 'The upstream server failed to send a request in the time allowed';
     }
 }

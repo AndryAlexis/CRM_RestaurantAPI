@@ -84,7 +84,6 @@ const userExistsByTokenId = async (req, _, next) => {
 
     // Get user ID from verified token
     const { id } = decodedToken;
-    console.log('AUTH middleware token id:', id);
 
     // Try to find user with provided ID
     const user = await getUserById(id);

@@ -22,7 +22,7 @@ router.use(
     hasToken, 
     userExistsByTokenId, 
     isAdmin, 
-    require('./api/admin/admin.user.routes')
+    require('./api/admin.routes')
 );
 
 // Catch any undefined routes
