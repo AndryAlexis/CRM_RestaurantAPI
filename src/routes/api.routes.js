@@ -18,10 +18,10 @@ router.use('/review', require('./api/review.routes'));
 // 2. Verify user is admin
 // 3. Verify user exists by token ID
 router.use(
-    '/admin', 
-    hasToken, 
-    userExistsByTokenId, 
-    isAdmin, 
+    '/admin',
+    hasToken,
+    userExistsByTokenId,
+    isAdmin,
     require('./api/admin.routes')
 );
 

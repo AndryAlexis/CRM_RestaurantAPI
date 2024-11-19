@@ -1,48 +1,87 @@
-const { selectById, selectAll, createMenu, deleteMenuById, updateMenuById } = require("../../models/api/menus.models");
-const { ConflictError, BadRequestError, LengthError, NotFoundError } = require('../../errors/client.errors');
-const { generateToken, verifyToken, isStringLengthValid } = require('../../utils/helpers');
-const { httpCodes, httpStatus } = require("../../utils/serverStatus");
+
+
+const {
+    BadRequestError,
+    NotFoundError,
+    ConflictError
+} = require("../../../errors/client.errors");
+
+const { deleteMenuById, updateMenuById, selectAll, selectById, createMenu } = require("../../../models/api/admin/admin.menus.models");
+
+const { httpCodes, httpStatus } = require('../../../utils/serverStatus');
+const { isNumber } = require('../../../utils/helpers');
+const { verifyToken } = require('../../../utils/helpers');
 
 /**
  * Retrieves a menu by its ID.
  * @param {Object} req - Express request object with menuId in params
+ * @param {Object} req.query - Query parameters
+ * @param {number} [req.query.page=1] - Page number to fetch
+ * @param {number} [req.query.limit=10] - Number of menus per page
+ * @param {string} [req.query.order='asc'] - Sort order ('asc' or 'desc')
  * @param {Object} res - Express response object
  * @param {Function} next - Express next middleware function
- * @returns {Promise<void>} Returns a JSON response with the menu details or calls next with an error
+ * @returns {Object} Paginated menus list with metadata
+ * @throws {BadRequestError} If page or limit parameters are invalid
+ * @throws {NotFoundError} If menu does not exist
  */
 const getById = async (req, res, next) => {
+    // Extract the 'menuId' from the route parameters (req.params)
     const { menuId } = req.params;
     try {
+        // Call the 'selectById' function to get the menu data by its ID.
         const menu = await selectById(menuId);
-        res.json(menu)
+        // If the menu is found, respond with a 200 (OK) status and the menu data.
+        return res.status(httpCodes.OK).json({
+            status: httpCodes.OK,
+            title: httpStatus[httpCodes.OK],
+            message: 'Menus fetched successfully',
+            data: menu
+        });
     } catch (error) {
+        // If an error occurs, pass it to the next error-handling middleware.
         next(error);
     }
 }
 
-/**
- * Retrieves all menus from the database.
- * @param {Object} req - Express request object
- * @param {Object} res - Express response object
- * @param {Function} next - Express next middleware function
- * @returns {Promise<void>} Returns a JSON response with an array of menu objects or calls next with an error
- */
 const getAll = async (req, res, next) => {
     try {
-        const menus = await selectAll();
-        res.json(menus)
+        // Extract and validate query parameters
+        let { page = 1, limit = 10, order = 'asc' } = req.query;
+
+        // Validate numeric parameters
+        if (!isNumber(page) || !isNumber(limit)) {
+            return next(new BadRequestError('Page and limit must be valid numbers'));
+        }
+
+        // Convert to integers
+        page = parseInt(page);
+        limit = parseInt(limit);
+
+        if (page < 1 || limit < 1) {
+            return next(new BadRequestError('Page and limit must be positive numbers'));
+        }
+
+        // Validate sort order
+        if (!['asc', 'desc'].includes(order)) {
+            return next(new BadRequestError('Invalid sort order. Use \'asc\' or \'desc\''));
+        }
+
+        // Fetch menus with pagination
+        const menus = await selectAll(page, limit, order);
+
+        // Return paginated response
+        return res.status(httpCodes.OK).json({
+            status: httpCodes.OK,
+            title: httpStatus[httpCodes.OK],
+            message: 'Menus fetched successfully',
+            data: menus
+        });
     } catch (error) {
         next(error);
     }
 }
 
-/**
- * Generates a new menu with the provided date, name and dishes.
- * @param {Object} req - Express request object with date, name and dishes in body
- * @param {Object} res - Express response object
- * @param {Function} next - Express next middleware function
- * @returns {Promise<void>} Returns a JSON response with a success message or calls next with an error
- */
 const generateMenu = async (req, res, next) => {
     // Step 1: Extract the necessary data (date, name, dishes) from the request body.
     const { date, name, dishes } = req.body;
@@ -63,14 +102,6 @@ const generateMenu = async (req, res, next) => {
     }
 }
 
-/**
- * Deletes a menu by its ID. Requires a valid JWT token in the 'Authorization' header
- * with the ID of the user that created the menu.
- * @param {Object} req - Express request object with menuId in params
- * @param {Object} res - Express response object
- * @param {Function} next - Express next middleware function
- * @returns {Promise<void>} Returns a JSON response with a success message or calls next with an error
- */
 const deleteMenu = async (req, res, next) => {
     try {
         const menuId = req.params.menuId;
@@ -98,19 +129,32 @@ const deleteMenu = async (req, res, next) => {
     }
 }
 
+/**
+ * Updates a menu by its ID with the provided data.
+ * @param {Object} req - Express request object containing menuId in params and update data in body
+ * @param {Object} res - Express response object
+ * @param {Function} next - Express next middleware function
+ * @returns {Promise<void>} Returns a JSON response with a success message or calls next with an error
+ * @throws {BadRequestError} If the update operation fails
+ */
 const updateById = async (req, res, next) => {
     try {
+        // Extract 'menuId' from the route parameters (req.params)
         const menuId = req.params.menuId;
+        // Call the 'updateMenuById' function to update the menu in the database using the menuId and request body
         const updatedMenu = await updateMenuById(menuId, req.body);
+        // If the menu update fails (i.e., no menu was updated), pass a BadRequestError to the next middleware
         if (!updatedMenu) {
             return next(new BadRequestError('Failed to update menu'));
         }
+        // If the menu is successfully updated, respond with a 200 (OK) status and a success message
         return res.status(httpCodes.OK).json({
             status: httpCodes.OK,
             title: httpStatus[httpCodes.OK],
             message: 'Menu updated successfully'
         });
     } catch (error) {
+        // If an error occurs during the update process, pass it to the next error-handling middleware
         next(error);
     }
 }
@@ -120,4 +164,4 @@ module.exports = {
     generateMenu,
     deleteMenu,
     updateById
-}
+};
