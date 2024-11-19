@@ -11,5 +11,13 @@ POST {{host}}/api/menus
 Content-Type: application/json
 
 {
-    "date": "2024-11-18"
-}
+    "dishes":[
+        1, 5, 15
+        
+    ], 
+    "date": "2024-11-19",
+    "name": "menu lunes"
+    }
+
+###  // Delete a menu with his ID
+DELETE {{host}}/api/menus/1
