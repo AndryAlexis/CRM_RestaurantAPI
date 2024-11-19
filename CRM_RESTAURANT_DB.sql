@@ -5,11 +5,12 @@ USE restaurant;
 DROP TABLE IF EXISTS user;
 CREATE TABLE user (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    email VARCHAR(255) UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL UNIQUE,
     name VARCHAR(64) NOT NULL,
     surname VARCHAR(64) NOT NULL,
     phone VARCHAR(20) NOT NULL,
-    role ENUM('admin', 'client') NOT NULL DEFAULT 'client'
+    role ENUM('admin', 'client') DEFAULT 'client'
 );
 
 DROP TABLE IF EXISTS review;
@@ -18,7 +19,7 @@ CREATE TABLE review (
     rating INT NOT NULL,
     comment TEXT NOT NULL,
     user_id INT NOT NULL, 
-    FOREIGN KEY (user_id) REFERENCES user (id)
+    FOREIGN KEY (user_id) REFERENCES user (id) ON DELETE CASCADE,
 );
 
 DROP TABLE IF EXISTS reservation;
@@ -27,9 +28,9 @@ CREATE TABLE reservation (
     `date` DATE NOT NULL,
     `time` ENUM('breakfast', 'lunch', 'dinner') NOT NULL,
     guests INT NOT NULL,
-    status ENUM('pending', 'confirmed', 'cancelled', 'completed') NOT NULL DEFAULT 'confirmed',
+    status ENUM('pending', 'confirmed', 'cancelled', 'completed') NOT NULL DEFAULT 'confirmed', -- delete maybe
     user_id INT NOT NULL, 
-    FOREIGN KEY (user_id) REFERENCES user (id)
+    FOREIGN KEY (user_id) REFERENCES user (id) ON DELETE CASCADE,
 );
 
 DROP TABLE IF EXISTS `table`; 
@@ -38,19 +39,18 @@ CREATE TABLE `table` (
     location ENUM('outside', 'inside'), 
     number INT NOT NULL UNIQUE,
     capacity INT NOT NULL,
-    status ENUM('available', 'ocupied', 'reserved', 'maintenance') NOT NULL DEFAULT 'available'
 );
 
 DROP TABLE IF EXISTS reservation_has_table;
-CREATE TABLE reversation_has_table (
+CREATE TABLE reservation_has_table (
     reservation_id INT NOT NULL,
     table_id INT NOT NULL,
-    FOREIGN KEY (reservation_id) REFERENCES reservation (id),
-    FOREIGN KEY (table_id) REFERENCES `table` (id),
+    FOREIGN KEY (reservation_id) REFERENCES reservation (id) ON DELETE CASCADE,
+    FOREIGN KEY (table_id) REFERENCES `table` (id) ON DELETE CASCADE,
     PRIMARY KEY(reservation_id, table_id),
 
     `date` DATE NOT NULL,
-    time ENUM('breakfast', 'lunch', 'dinner'),
+    time ENUM('breakfast', 'lunch', 'dinner') NOT NULL,
     UNIQUE (table_id, `date`, `time`)
 );
 
@@ -58,6 +58,7 @@ DROP TABLE IF EXISTS dish;
 CREATE TABLE dish (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(255) NOT NULL UNIQUE,
+    type ENUM("dessert"),
     description TEXT, 
     price DECIMAL(5,2) NOT NULL,
     image_url VARCHAR(255) NOT NULL
@@ -67,6 +68,7 @@ DROP TABLE IF EXISTS menu;
 CREATE TABLE menu (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(100) UNIQUE, 
+    price DECIMAL(5,2) NOT NULL,
     `date` DATE NOT NULL 
 );
 
@@ -74,8 +76,8 @@ DROP TABLE IF EXISTS menu_has_dish;
 CREATE TABLE menu_has_dish (
     menu_id INT NOT NULL,
     dish_id INT NOT NULL,
-    FOREIGN KEY (menu_id) REFERENCES menu(id),
-    FOREIGN KEY (dish_id) REFERENCES dish(id),
+    FOREIGN KEY (menu_id) REFERENCES menu(id) ON DELETE CASCADE,
+    FOREIGN KEY (dish_id) REFERENCES dish(id) ON DELETE CASCADE,
     PRIMARY KEY(menu_id, dish_id)
 );
 
@@ -93,8 +95,8 @@ DROP TABLE IF EXISTS dish_has_category;
 CREATE TABLE dish_has_category (
     dish_id INT NOT NULL,
     category_id INT NOT NULL,
-    FOREIGN KEY (dish_id) REFERENCES dish(id),
-    FOREIGN KEY (category_id) REFERENCES category(id),
+    FOREIGN KEY (dish_id) REFERENCES dish(id) ON DELETE CASCADE,
+    FOREIGN KEY (category_id) REFERENCES category(id) ON DELETE CASCADE,
     PRIMARY KEY(dish_id, category_id)
 );
 
@@ -103,8 +105,8 @@ DROP TABLE IF EXISTS menu_has_category;
 CREATE TABLE menu_has_category (
     menu_id INT NOT NULL,
     category_id INT NOT NULL,
-    FOREIGN KEY (menu_id) REFERENCES menu(id),
-    FOREIGN KEY (category_id) REFERENCES category(id),
+    FOREIGN KEY (menu_id) REFERENCES menu(id) ON DELETE CASCADE,
+    FOREIGN KEY (category_id) REFERENCES category(id) ON DELETE CASCADE,
     PRIMARY KEY(menu_id, category_id)
 );
 

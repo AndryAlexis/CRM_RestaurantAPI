@@ -1,0 +1,34 @@
+@host = http://localhost:3000
+
+### Get all
+GET {{host}}/api/reservations
+
+### Get all with optional params
+GET {{host}}/api/reservations?date=2024-11-19&user_id=1&status=pending
+
+### Get by id
+GET {{host}}/api/reservations/1
+
+### POST a reservation (with tables)
+POST {{host}}/api/reservations
+Content-Type: application/json
+
+{
+    "date": "2025-08-10",
+    "time": "lunch",
+    "guests": 5,
+    "status": "pending",
+    "user_id": 1,
+    "tables": [2, 3]
+}
+
+### Delete by id
+DELETE {{host}}/api/reservations/SSAD
+
+#################### TABLES ####################
+
+### Get all
+GET {{host}}/api/tables
+
+### Get available tables
+GET {{host}}/api/tables/available/2024-04-01
