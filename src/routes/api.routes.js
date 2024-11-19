@@ -15,14 +15,14 @@ router.use('/review', require('./api/review.routes'));
 
 // Admin routes
 // 1. Verify JWT token is present and valid
-// 2. Verify user is admin
-// 3. Verify user exists by token ID
+// 2. Verify user exists by token ID
+// 3. Verify user is admin
 router.use(
     '/admin', 
     hasToken, 
     userExistsByTokenId, 
     isAdmin, 
-    require('./api/admin.routes')
+    require('./api/admin/admin.user.routes')
 );
 
 // Catch any undefined routes

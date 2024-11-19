@@ -2,20 +2,19 @@ const db = require('../../config/db');
 
 // SQL queries as constants to improve maintainability
 const SQL_QUERIES = {
-    SELECT_ALL: 'SELECT * FROM review',
+    SELECT_ALL: 'SELECT id, rating, comment FROM review WHERE user_id = ?',
     SELECT_BY_ID: 'SELECT * FROM review WHERE id = ?',
-    SELECT_BY_USER_ID: 'SELECT id, rating, comment FROM review WHERE user_id = ?',
+    SELECT_BY_ID_AND_USER_ID: 'SELECT * FROM review WHERE id = ? AND user_id = ?',
     INSERT: 'INSERT INTO review (user_id, rating, comment) VALUES (?, ?, ?)',
     DELETE: 'DELETE FROM review WHERE id = ?',
-    DELETE_BY_USER_ID: 'DELETE FROM review WHERE user_id = ?'
 };
 
 /**
  * Get all reviews from the database
  * @returns {Promise<Array|null>} Array of reviews or null if none found
  */
-const selectReviews = async () => {
-    const [result] = await db.query(SQL_QUERIES.SELECT_ALL);
+const selectReviews = async (user_id) => {
+    const [result] = await db.query(SQL_QUERIES.SELECT_ALL, [user_id]);
     return result.length ? result : null;
 };
 
@@ -29,19 +28,9 @@ const selectReviewById = async (id) => {
     return result.length ? result[0] : null;
 };
 
-/**
- * Get all reviews by a specific user
- * @param {number} userId User ID
- * @returns {Promise<Array|null>} Array of reviews or null if none found
- */
-const selectReviewsByUserId = async (userId) => {
-    const [result] = await db.query(SQL_QUERIES.SELECT_BY_USER_ID, [userId]);
-
-    if (!result.length) {
-        return null;
-    }
-
-    return result;
+const selectReviewByIdAndUserId = async (id, user_id) => {
+    const [result] = await db.query(SQL_QUERIES.SELECT_BY_ID_AND_USER_ID, [id, user_id]);
+    return result.length ? result[0] : null;
 };
 
 /**
@@ -69,7 +58,7 @@ const deleteReview = async (id) => {
 module.exports = {
     selectReviews,
     selectReviewById,
-    selectReviewsByUserId,
     insertReview,
     deleteReview,
+    selectReviewByIdAndUserId,
 };

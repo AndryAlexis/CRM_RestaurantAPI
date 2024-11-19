@@ -1,28 +1,56 @@
 const { 
     selectReviews, 
-    selectReviewById, 
-    selectReviewsByUserId, 
+    selectReviewById,
     insertReview, 
-    deleteReview 
+    deleteReview,
+    selectReviewByIdAndUserId
 } = require('../../models/api/review.models');
 const { BadRequestError, NotFoundError } = require('../../errors/client.errors');
 const { BadRequestError : BadServerRequestError } = require('../../errors/server.errors');
 const { verifyToken } = require('../../utils/helpers');
 const { httpStatus, httpCodes } = require('../../utils/serverStatus');
 
-const getReviews = async (req, res) => {
-    const reviews = await selectReviews();
-    res.json(reviews);
-};  
+/**
+ * Gets all reviews for the authenticated user
+ * @param {Object} req - Express request object containing authorization header
+ * @param {Object} res - Express response object
+ * @param {Function} next - Express next middleware function
+ * @returns {Object} JSON response containing user's reviews
+ */
+const getReviews = async (req, res, next) => {
+    try {
+        // Check if user exists based on middleware validation
+        if (!req.userExistsById) {
+            return next(new NotFoundError('User does not exist'));
+        }
 
-const getReviewById = async (req, res) => {
-    const review = await selectReviewById(req.params.id);
-    res.json(review);
+        // Extract user ID from authorization token
+        const { id } = verifyToken(req.headers.authorization);
+
+        // Get all reviews for this user from database
+        const reviews = await selectReviews(id);
+        if (!reviews) {
+            return next(new NotFoundError('There are no reviews for this user'));
+        }
+
+        // Return success response with reviews data
+        res.status(httpCodes.OK).json({
+            status: httpCodes.OK,
+            title: httpStatus[httpCodes.OK],
+            message: 'Reviews fetched successfully',
+            data: reviews
+        });
+    } catch (error) {
+        next(error);
+    }
 };
 
 const getReviewsByUserId = async (req, res, next) => {
     try {
-        const review = await selectReviewsByUserId(req.params.id);
+        if (!req.userExistsById) {
+            return next(new NotFoundError('User does not exist'));
+        }
+        const review = await selectReviewById(req.params.id);
 
         if (!review) {
             return next(new NotFoundError('There are no reviews for this user'));
@@ -66,7 +94,7 @@ const create = async (req, res, next) => {
         if (!review) {
             return next(new BadServerRequestError('Failed to create review'));
         }
-    
+
         // Return success response
         return res.status(httpCodes.CREATED).json({
             status: httpCodes.CREATED,
@@ -87,10 +115,29 @@ const create = async (req, res, next) => {
  */ 
 const remove = async (req, res, next) => {
     try {
+        // Check if user exists based on middleware validation
+        if (!req.userExistsById) {
+            return next(new NotFoundError('User does not exist'));
+        }
+
+        // Extract user ID from authorization token
+        const { id } = verifyToken(req.headers.authorization);
+
+        // Check if review exists for this user
+        const reviewToDelete = await selectReviewByIdAndUserId(req.params.id, id);
+
+        // If review does not exist, return error
+        if (!reviewToDelete) {
+            return next(new NotFoundError('Review not found for this user'));
+        }
+        
+        // Attempt to delete the review from database
         const result = await deleteReview(req.params.id);
         if (!result) {
-            return next(new BadRequestError('Failed to delete review'));
+            return next(new BadServerRequestError('Failed to delete review'));
         }
+
+        // Return success response
         return res.status(httpCodes.OK).json({
             status: httpCodes.OK,
             title: httpStatus[httpCodes.OK],
@@ -103,7 +150,6 @@ const remove = async (req, res, next) => {
 
 module.exports = {
     getReviews,
-    getReviewById,
     getReviewsByUserId,
     create,
     remove

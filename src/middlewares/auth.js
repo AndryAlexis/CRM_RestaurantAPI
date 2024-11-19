@@ -28,11 +28,23 @@ const isAdmin = async (req, _, next) => {
     next();
 };
 
+/**
+ * Middleware to check if the provided ID is a number
+ * @param {Object} req - Express request object containing ID in params
+ * @param {Object} _ - Express response object (unused)
+ * @param {Function} next - Express next middleware function
+ * @throws {BadRequestError} If ID is not a number
+ */
 const idIsNumber = (req, _, next) => {
+    // Extract ID from request parameters
     const { id } = req.params;
+
+    // Check if ID is a number
     if (!isNumber(id)) {
         return next(new BadRequestError('ID must be a number'));
     }
+
+    // ID is a number, continue to next middleware
     next();
 }
 

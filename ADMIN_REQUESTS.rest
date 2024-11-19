@@ -29,7 +29,4 @@ Content-Type: application/json
 DELETE {{host}}/api/admin/user/22
 Authorization: {{tokenAdmin}}
 
-CRUD /id
-
-
 ############### ADMIN REVIEWS ###############
