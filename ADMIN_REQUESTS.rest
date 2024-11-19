@@ -1,6 +1,5 @@
 @host = http://localhost:3000
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjIsInJvbGUiOiJjbGllbnQifQ.IjihvhiAoa8_CLKz0kTclddk-4qEUanHD5vXe0LmHJk
-@tokenAdmin = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjEsInJvbGUiOiJhZG1pbiJ9.OpkP666aKDaMEhwdcpLEVnc77A9xZfBHQMMUsUAzC5I
+@tokenAdmin = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjF9.RfopwvQBbCp4QP3VGyYMR6CcjBKBlbhf2aIFIZFCLmU
 
 ############### ADMIN USER ###############
 
@@ -9,7 +8,7 @@ GET {{host}}/api/admin/user?order=asc&page=1&limit=10
 Authorization: {{tokenAdmin}}
 
 ### Get a user info
-GET {{host}}/api/admin/user/21d
+GET {{host}}/api/admin/user/21
 Authorization: {{tokenAdmin}}
 
 ### Update a user info
@@ -19,7 +18,7 @@ Content-Type: application/json
 
 {
     "email": "andry.html@gmail.com",
-    "name": "Andry",
+    "name": "Ssadry",
     "surname": "Reyes",
     "phone": "1234567890",
     "password": "12345"
@@ -29,7 +28,30 @@ Content-Type: application/json
 DELETE {{host}}/api/admin/user/22
 Authorization: {{tokenAdmin}}
 
-CRUD /id
+
+
 
 
 ############### ADMIN REVIEWS ###############
+
+### Get all reviews
+GET {{host}}/api/admin/review?order=asc&page=1&limit=10
+Authorization: {{tokenAdmin}}
+
+### Get a review by ID
+GET {{host}}/api/admin/review/9
+Authorization: {{tokenAdmin}}
+
+### Update a review
+PUT {{host}}/api/admin/review/3
+Authorization: {{tokenAdmin}}
+Content-Type: application/json
+
+{
+    "rating": 1,
+    "comment": "Great service!"
+}
+
+### Delete a review
+DELETE {{host}}/api/admin/review/9
+Authorization: {{tokenAdmin}}

@@ -13,7 +13,6 @@ const { httpCodes, httpStatus } = require('../../../utils/serverStatus');
 const { isNumber } = require('../../../utils/helpers');
 const bcrypt = require('bcryptjs');
 const { BYCRYPT_SALT_ROUNDS } = require('../../../config/constants');
-const { verifyToken } = require('../../../utils/helpers');
 
 /**
  * Get paginated list of all users
@@ -29,6 +28,10 @@ const { verifyToken } = require('../../../utils/helpers');
  */
 const getUsers = async (req, res, next) => {
     try {
+        if (!req.userExistsById) {
+            return next(new NotFoundError('User does not exist'));
+        }
+
         // Extract and validate query parameters
         let { page = 1, limit = 10, order = 'asc' } = req.query;
 

@@ -1,5 +1,5 @@
 @host = http://localhost:3000
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mzl9.65TmlVoYYlxmeSC4rBSoa7ewBKzutQQ_Npnv8__AX14
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDB9.W4aqvh53FH9sBstAn6kDt0FOf4WIMWemFIpmaavsOus
 
 ### Reviews endpoints
 
@@ -12,3 +12,11 @@ Content-Type: application/json
     "rating": 5,
     "comment": "Esto es una prueba ah review"
 }
+
+### Get all user reviews
+GET {{host}}/api/review
+Authorization: {{token}}
+
+### Delete a review
+DELETE {{host}}/api/review/2
+Authorization: {{token}}

@@ -2,8 +2,6 @@ const express = require('express');
 const router = express.Router();
 const { 
     getReviews, 
-    getReviewById, 
-    getReviewsByUserId, 
     create, 
     remove 
 } = require('../../controllers/api/review.controllers');
@@ -12,40 +10,22 @@ const {
     hasToken, 
     userExistsByTokenId,
     hasRequiredBodyKeys,
-    idIsNumber,
-    isAdmin
+    removeSpacesOfBody,
+    idIsNumber
 } = require('../../middlewares/auth');
 
-
-
-// Get all reviews
+// Get all user reviews
 router.get('/', 
     hasToken,
     userExistsByTokenId,
     getReviews
 );
 
-// Get reviews by user id
-router.get('/user/:id', 
-    hasToken,
-    isAdmin,
-    idIsNumber,
-    userExistsByTokenId,
-    getReviewsByUserId
-);
-
-// Get review by id
-router.get('/:id', 
-    hasToken,
-    idIsNumber,
-    userExistsByTokenId,
-    getReviewById
-);
-
 // Create a review
 router.post('/', 
     hasToken,
     userExistsByTokenId,
+    removeSpacesOfBody,
     hasRequiredBodyKeys(['rating', 'comment']),
     create
 );
@@ -53,6 +33,7 @@ router.post('/',
 // Delete a review
 router.delete('/:id', 
     hasToken,
+    idIsNumber,
     userExistsByTokenId,
     remove
 );
