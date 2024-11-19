@@ -1,6 +1,7 @@
 const { ForbiddenError, BadRequestError, UnauthorizedError } = require('../errors/client.errors');
-const { getUserByEmail, getUserById } = require('../models/api/users.models');
+const { getUserByEmail, getUserById } = require('../models/api/user.models');
 const { hasKeys, hasAtLeastOneKey, isNumber, verifyToken } = require('../utils/helpers');
+const { selectUserById } = require('../models/api/admin/admin.user.models');
 
 /**
  * Middleware to check if the user has admin privileges
@@ -9,15 +10,17 @@ const { hasKeys, hasAtLeastOneKey, isNumber, verifyToken } = require('../utils/h
  * @param {Function} next - Express next middleware function
  * @throws {ForbiddenError} If user is not an admin
  */
-const isAdmin = (req, _, next) => {
+const isAdmin = async (req, _, next) => {
     // Extract token from request headers
     const token = req.headers.authorization;
 
     // Verify JWT token
-    const { role } = verifyToken(token);
+    const { id } = verifyToken(token);
 
-    // Check if user has admin privileges
-    if (role !== 'admin') {
+    // Check if user is admin
+    const admin = await selectUserById(id);
+
+    if (admin.role !== 'admin') {
         return next(new ForbiddenError());
     }
 
@@ -69,6 +72,28 @@ const userExistsByTokenId = async (req, _, next) => {
 
     // Get user ID from verified token
     const { id } = decodedToken;
+    console.log('AUTH middleware token id:', id);
+
+    // Try to find user with provided ID
+    const user = await getUserById(id);
+
+    // Set flag on request indicating if user exists
+    req.userExistsById = user ? true : false;
+
+    // Continue to next middleware
+    next();
+}
+
+/**
+ * Middleware to check if a user exists in the database by ID from request params
+ * @param {Object} req - Express request object containing user ID in params
+ * @param {Object} _ - Express response object (unused)
+ * @param {Function} next - Express next middleware function
+ * @returns {Promise<void>} Sets userExistsById flag on request object and calls next
+ */
+const userExistsById = async (req, _, next) => {
+    // Extract ID from request parameters
+    const { id } = req.params;
 
     // Try to find user with provided ID
     const user = await getUserById(id);
@@ -175,5 +200,6 @@ module.exports = {
     removeSpacesOfBody,
     userExistsByTokenId,
     hasToken,
-    idIsNumber
+    idIsNumber,
+    userExistsById
 };

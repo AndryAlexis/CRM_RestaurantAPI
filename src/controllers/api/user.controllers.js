@@ -4,7 +4,6 @@ const {
     BadRequestError, 
     LengthError, 
     NotFoundError,
-    UnauthorizedError
 } = require('../../errors/client.errors');
 const { 
     registerUser, 
@@ -12,11 +11,16 @@ const {
     updateUserById, 
     deleteUserById, 
     getUserById,
-    getAllUsers
-} = require('../../models/api/users.models');
+} = require('../../models/api/user.models');
 const { httpCodes, httpStatus } = require('../../utils/serverStatus');
-const { generateToken, verifyToken, isStringLengthValid, isNumber } = require('../../utils/helpers');
+const { 
+    generateToken, 
+    verifyToken, 
+    isStringLengthValid, 
+} = require('../../utils/helpers');
 const bcrypt = require('bcryptjs');
+const { BYCRYPT_SALT_ROUNDS } = require('../../config/constants');
+const { deleteReviewByUserId } = require('../../models/api/review.models');
 
 /**
  * Register a new user
@@ -43,7 +47,7 @@ const register = async (req, res, next) => {
         const { name, password, email, phone, surname } = req.body;
 
         // Hash the password before storing
-        const passwordHash = await bcrypt.hash(password, 10);
+        const passwordHash = await bcrypt.hash(password, BYCRYPT_SALT_ROUNDS);
         const newUserData = { name, password: passwordHash, email, phone, surname };
 
         // Insert new user into database
@@ -52,18 +56,11 @@ const register = async (req, res, next) => {
             return next(new BadRequestError('Failed to register user'));
         }
 
-        // Generate JWT token for the new user
-        const token = generateToken({ 
-            id: insertedUser.id, 
-            role: 'client' // Always set role to client for new users
-        });
-
         // Send success response with token
         return res.status(httpCodes.CREATED).json({
             status: httpCodes.CREATED,
             title: httpStatus[httpCodes.CREATED],
             message: 'User registered successfully',
-            token
         });
     } catch (error) {
         next(error);
@@ -96,7 +93,6 @@ const login = async (req, res, next) => {
         // Generate JWT token for authenticated user
         const token = generateToken({ 
             id: user.id, 
-            role: user.role 
         });
 
         // Send success response with token
@@ -136,17 +132,12 @@ const update = async (req, res, next) => {
         // Verify JWT token
         const decodedToken = verifyToken(token);
 
-        // If token is invalid, return unauthorized error
-        if (!decodedToken) {
-            return next(new UnauthorizedError('Invalid token'));
-        }
-
         // Get user ID from verified token
         const { id } = decodedToken;
 
         if (req.body.password) {
             // Hash new password if provided
-            req.body.password = await bcrypt.hash(req.body.password, 10);
+            req.body.password = await bcrypt.hash(req.body.password, BYCRYPT_SALT_ROUNDS);
         }
 
         // Attempt to update user in database
@@ -188,12 +179,12 @@ const deleteUser = async (req, res, next) => {
         // Extract and verify JWT token from request headers
         const token = req.headers.authorization;
         const decodedToken = verifyToken(token);
-        if (!decodedToken) {
-            return next(new UnauthorizedError('Invalid token'));
-        }
 
         // Get user ID from verified token
         const { id } = decodedToken;
+
+        // Delete reviews associated with the user
+        // await deleteReviewByUserId(id);
 
         // Attempt to delete user from database
         const deletedUser = await deleteUserById(id);
@@ -233,18 +224,6 @@ const getUser = async (req, res, next) => {
         const token = req.headers.authorization;
         const decodedToken = verifyToken(token);
 
-        // If token is invalid, return unauthorized error
-        if (!decodedToken) {
-            return next(new UnauthorizedError('Invalid token'));
-        }
-
-        // Check if user ID from token matches the requested user ID
-        if (parseInt(req.params.id) !== parseInt(decodedToken.id)) {
-            return next(
-                new UnauthorizedError('The id in the token does not match the requested user ID')
-            );
-        }
-
         // Get user ID from verified token
         const { id } = decodedToken;
 
@@ -256,70 +235,18 @@ const getUser = async (req, res, next) => {
             status: httpCodes.OK,
             title: httpStatus[httpCodes.OK],
             message: 'User fetched successfully',
-            user
+            data : user
         });
     } catch (error) {
         next(error);
     }
 }
 
-/**
- * Get paginated list of all users
- * @param {Object} req - Express request object
- * @param {Object} req.query - Query parameters
- * @param {number} [req.query.page=1] - Page number to fetch
- * @param {number} [req.query.limit=10] - Number of users per page
- * @param {string} [req.query.order=asc] - Sort order ('asc' or 'desc')
- * @param {Object} res - Express response object
- * @param {Function} next - Express next middleware function
- * @returns {Object} Paginated users list with metadata
- * @throws {BadRequestError} If page or limit parameters are invalid
- */
-const getUsers = async (req, res, next) => {
-    try {
-        // Extract and validate query parameters
-        let { page = 1, limit = 10, order = 'asc' } = req.query;
-
-        // Validate numeric parameters
-        if (!isNumber(page) || !isNumber(limit)) {
-            return next(new BadRequestError('Page and limit must be valid numbers'));
-        }
-
-        // Convert to integers and validate ranges
-        page = parseInt(page);
-        limit = parseInt(limit);
-
-        if (page < 1 || limit < 1) {
-            return next(new BadRequestError('Page and limit must be positive numbers'));
-        }
-
-        // Validate sort order
-        if (!['asc', 'desc'].includes(order)) {
-            return next(new BadRequestError('Invalid sort order. Use \'asc\' or \'desc\''));
-        }
-
-        // Fetch users with pagination
-        const users = await getAllUsers(page, limit, order);
-
-        // Return paginated response
-        return res.status(httpCodes.OK).json({
-            status: httpCodes.OK,
-            title: httpStatus[httpCodes.OK],
-            message: 'Users fetched successfully',
-            data: {
-                users,
-            }
-        });
-    } catch (error) {
-        next(error);
-    }
-}
 
 module.exports = {
     register,
     login,
     update,
     deleteUser,
-    getUser,
-    getUsers
+    getUser
 };

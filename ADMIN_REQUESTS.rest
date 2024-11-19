@@ -1,0 +1,33 @@
+@host = http://localhost:3000
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjIsInJvbGUiOiJjbGllbnQifQ.IjihvhiAoa8_CLKz0kTclddk-4qEUanHD5vXe0LmHJk
+@tokenAdmin = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjEsInJvbGUiOiJhZG1pbiJ9.OpkP666aKDaMEhwdcpLEVnc77A9xZfBHQMMUsUAzC5I
+
+############### ADMIN USER ###############
+
+### Get all users
+GET {{host}}/api/admin/user?order=asc&page=1&limit=10
+Authorization: {{tokenAdmin}}
+
+### Get a user info
+GET {{host}}/api/admin/user/21d
+Authorization: {{tokenAdmin}}
+
+### Update a user info
+PUT {{host}}/api/admin/user/21
+Authorization: {{tokenAdmin}}
+Content-Type: application/json
+
+{
+    "email": "andry.html@gmail.com",
+    "name": "Andry",
+    "surname": "Reyes",
+    "phone": "1234567890",
+    "password": "12345"
+}
+
+### Delete a user
+DELETE {{host}}/api/admin/user/22
+Authorization: {{tokenAdmin}}
+
+
+############### ADMIN REVIEWS ###############

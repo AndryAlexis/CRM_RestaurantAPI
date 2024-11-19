@@ -56,23 +56,7 @@ const getUserById = async (id) => {
     return response.length > 0 ? response[0] : null;
 }
 
-/**
- * Get all users from the database
- * @returns {Promise<Array|null>} Array of user objects if found, null if no users exist
- * @description Retrieves all user records from database - be careful with data exposure
- */
-const getAllUsers = async (page, limit, order) => {
-    // Calculate offset based on page and limit
-    const offset = (page - 1) * limit;
-    // Corrected SQL query with ORDER BY before LIMIT and OFFSET
-    const [response] = await db.query(
-        `SELECT * FROM user ORDER BY id ${order} LIMIT ? OFFSET ?`, 
-        [limit, offset]
-    );
 
-    // Return array of users if any exist, otherwise null
-    return response.length > 0 ? response : null;
-}
 
 /**
  * Update user details in the database
@@ -88,27 +72,15 @@ const updateUserById = async (id, userData) => {
     // Build dynamic update query based on provided fields
     const updates = [];
     const values = [];
-    
-    if (userData.email) {
-        updates.push('email = ?');
-        values.push(userData.email);
-    }
-    if (userData.name) {
-        updates.push('name = ?');
-        values.push(userData.name);
-    }
-    if (userData.surname) {
-        updates.push('surname = ?');
-        values.push(userData.surname);
-    }
-    if (userData.phone) {
-        updates.push('phone = ?');
-        values.push(userData.phone);
-    }
-    if (userData.password) {
-        updates.push('password = ?');
-        values.push(userData.password);
-    }
+
+    const allowedFields = ['email', 'name', 'surname', 'phone', 'password'];    
+
+    Object.entries(userData).forEach(([key, value]) => {
+        if (allowedFields.includes(key) && value !== undefined) {
+            updates.push(`${key} = ?`);
+            values.push(value);
+        }
+    });
 
     // Add ID to values array for WHERE clause
     values.push(id);
@@ -130,6 +102,7 @@ const updateUserById = async (id, userData) => {
  * @throws {Error} If there was a database error during deletion
  */
 const deleteUserById = async (id) => {
+
     // Execute DELETE query with prepared statement for security
     const [response] = await db.query(
         'DELETE FROM user WHERE id = ?',
@@ -147,5 +120,4 @@ module.exports = {
     updateUserById,
     getUserById,
     deleteUserById,
-    getAllUsers
 };
