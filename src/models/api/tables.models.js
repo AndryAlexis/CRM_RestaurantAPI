@@ -11,9 +11,14 @@ const selectByNumber = async (number) => {
     return table
 }
 
+const selectByLocation = async (location) => {
+    const [table] = await db.query('SELECT * FROM `table` WHERE location = ?', [location])
+    return table
+}
 
 module.exports = {
     selectAll,
     selectByNumber,
+    selectByLocation
 }
 

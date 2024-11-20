@@ -5,8 +5,8 @@ USE restaurant;
 DROP TABLE IF EXISTS user;
 CREATE TABLE user (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    password VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
     name VARCHAR(64) NOT NULL,
     surname VARCHAR(64) NOT NULL,
     phone VARCHAR(20) NOT NULL,
@@ -19,7 +19,7 @@ CREATE TABLE review (
     rating INT NOT NULL,
     comment TEXT NOT NULL,
     user_id INT NOT NULL, 
-    FOREIGN KEY (user_id) REFERENCES user (id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES user (id) ON DELETE CASCADE
 );
 
 DROP TABLE IF EXISTS reservation;
@@ -28,9 +28,9 @@ CREATE TABLE reservation (
     `date` DATE NOT NULL,
     `time` ENUM('breakfast', 'lunch', 'dinner') NOT NULL,
     guests INT NOT NULL,
-    status ENUM('pending', 'confirmed', 'cancelled', 'completed') NOT NULL DEFAULT 'confirmed', -- delete maybe
+    status ENUM('pending', 'confirmed', 'cancelled', 'completed') NOT NULL DEFAULT 'confirmed',
     user_id INT NOT NULL, 
-    FOREIGN KEY (user_id) REFERENCES user (id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES user (id) ON DELETE CASCADE
 );
 
 DROP TABLE IF EXISTS `table`; 
@@ -38,7 +38,7 @@ CREATE TABLE `table` (
     id INT PRIMARY KEY AUTO_INCREMENT,
     location ENUM('outside', 'inside'), 
     number INT NOT NULL UNIQUE,
-    capacity INT NOT NULL,
+    capacity INT NOT NULL
 );
 
 DROP TABLE IF EXISTS reservation_has_table;
