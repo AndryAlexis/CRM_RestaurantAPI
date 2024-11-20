@@ -1,6 +1,6 @@
-const { insertReservationTable } = require("../../models/api/reservation-has-table.models")
-const { selectAll, selectByParams, selectById, insertReservation, deleteById } = require("../../models/api/reservations.models")
-const { selectByNumber: selectTableByNumber } = require("../../models/api/tables.models")
+const { insertReservationTable, selectByTableDateTime } = require("../../models/api/reservation-has-table.models")
+const { selectAll, selectByParams, selectById, insertReservation, deleteById, updateStatusById } = require("../../models/api/reservations.models")
+const { selectByNumber: selectTableByNumber, selectByLocation } = require("../../models/api/tables.models")
 
 const getAll = async (req, res, next) => {
 
@@ -49,6 +49,58 @@ const getById = async (req, res, next) => {
     }
 }
 
+const createByLocation = async (req, res, next) => {
+    const { date, time, guests, status, user_id, location } = req.body
+    let reservationId;
+
+    try {
+        const tables = await selectByLocation(location)
+        const selectedTables = []
+
+        // Insertar en selectedTables las mesas disponibles 
+        // capacity es la capacidad total de las mesas insertadas
+        let capacity = 0
+        for (const table of tables) {
+            const isReserved = await selectByTableDateTime(table.id, date, time)
+
+            if (capacity < guests && !isReserved) {
+                capacity += table.capacity
+                selectedTables.push(table)
+            }
+        }
+
+        // Comprobar que la capacidad de las mesas sea suficiente
+        if (guests > capacity)
+            return res.status(409).json({ message: "Guests exceed our capacity" })
+
+        // Hacer la reserva
+        reservationId = await insertReservation(date, time, guests, status, user_id)
+        await Promise.all(selectedTables.map(table =>
+            insertReservationTable(reservationId, date, time, table.id)))
+
+        res.status(200).json({
+            message: "Reservation succesful",
+            reservationId: reservationId
+        })
+
+    } catch (err) {
+
+        // Deshacer la reserva
+        await deleteById(reservationId)
+
+        // DB errros
+        if (['ER_TRUNCATED_WRONG_VALUE', 'WARN_DATA_TRUNCATED', 'ER_TRUNCATED_WRONG_VALUE_FOR_FIELD']
+            .includes(err.code))
+            return res.status(400).json({ message: "Invalid body data" })
+
+        if (err.code === 'ER_DUP_ENTRY')
+            return res.status(409).json({ message: "Tables already reserved" })
+
+        next(err)
+    }
+}
+
+// No se usara al final 
 const createWithTables = async (req, res, next) => {
     const { date, time, guests, status, user_id, tables: tablesNum } = req.body
     let reservationId;
@@ -115,10 +167,31 @@ const deleteReservation = async (req, res, next) => {
     }
 }
 
+const setReservationStatusById = async (req, res, next) => {
+    const { id, status } = req.params
+
+    try {
+        const result = await updateStatusById(id, status)
+
+        if (result)
+            res.json({ message: "Update successful" })
+
+    } catch (err) {
+
+        // DB errros
+        if (['ER_TRUNCATED_WRONG_VALUE', 'WARN_DATA_TRUNCATED', 'ER_TRUNCATED_WRONG_VALUE_FOR_FIELD']
+            .includes(err.code))
+            return res.status(400).json({ message: "Invalid body data" })
+
+        next(err)
+    }
+}
+
 
 module.exports = {
     getAll,
     getById,
-    createWithTables,
-    deleteReservation
+    deleteReservation,
+    createByLocation,
+    setReservationStatusById
 }

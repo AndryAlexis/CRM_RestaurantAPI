@@ -44,14 +44,30 @@ const insertReservation = async (date, time, guests, status, user_id) => {
 const deleteById = async (id) => {
 
     const [result] = await db.query(
-        `DELETE FROM reservation WHERE id = ?`,
+        `DELETE 
+        FROM reservation
+        WHERE id = ?`,
         [id]
     )
 
-    if (result.affectedRows === 0) 
+    if (result.affectedRows === 0)
         return false
-    
+
     return true
+}
+
+const updateStatusById = async (id, status) => {
+
+    const [result] = await db.query(`
+        UPDATE reservation 
+        SET status = ?
+        WHERE id = ?`,
+        [status, id])
+
+    if (result.affectedRows)
+        return true
+
+    return false
 }
 
 
@@ -60,5 +76,6 @@ module.exports = {
     selectById,
     selectByParams,
     insertReservation,
-    deleteById
+    deleteById,
+    updateStatusById
 }
