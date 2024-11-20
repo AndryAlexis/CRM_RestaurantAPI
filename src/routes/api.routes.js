@@ -7,7 +7,8 @@ const { hasToken, userExistsByTokenId, isAdmin } = require('../middlewares/auth'
 router.use(rateLimiter);
 
 // /api/
-router.use('/menus', require('./api/menus.routes'));
+router.use('/menu', require('./api/admin/admin.menu.routes'));
+router.use('/menus', require('./api/menu/menus.routes'));
 router.use('/user', require('./api/user.routes'));
 router.use('/reservations', require('./api/reservations.routes'));
 router.use('/tables', require('./api/tables.routes'))
@@ -18,10 +19,10 @@ router.use('/review', require('./api/review.routes'));
 // 2. Verify user exists by token ID
 // 3. Verify user is admin
 router.use(
-    '/admin', 
-    hasToken, 
-    userExistsByTokenId, 
-    isAdmin, 
+    '/admin',
+    hasToken,
+    userExistsByTokenId,
+    isAdmin,
     require('./api/admin.routes')
 );
 

@@ -1,0 +1,38 @@
+@host = http://localhost:3000
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTB9.kv-HoJpD67mASPnzgsow21P4JafMbnJVE3hmOLxkQ54
+
+### // Get a menu with ID
+GET {{host}}/api/admin/menu/25
+Authorization: {{token}}
+
+### // Get all menus
+GET {{host}}/api/admin/menu?order=desc&page=1&limit=10
+Authorization: {{token}}
+
+###  // Create menu
+POST {{host}}/api/admin/menu
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+    "dishes":[
+        1, 5, 15
+        
+    ], 
+    "date": "2024-11-21",
+    "name": "menu viernes"
+    }
+
+###  // Delete a menu with his ID
+DELETE {{host}}/api/admin/menu/25
+Authorization: {{token}}
+
+###
+PUT {{host}}/api/admin/menu/26
+Authorization: {{token}}
+Content-Type: application/json
+
+{
+    "name": "menu sabado",
+    "date": "2024-11-21"
+}
