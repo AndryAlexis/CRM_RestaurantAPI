@@ -8,9 +8,10 @@ const db = require('../../../config/db');
  * @returns {Promise<Array|null>} Array of user objects if found, null if no users exist
  * @description Retrieves all user records from database - be careful with data exposure
  */
-const selectAllUsers = async (page, limit, order) => {
+const selectAllUsersByPagination = async (page, limit, order) => {
     // Calculate offset based on page and limit
     const offset = (page - 1) * limit;
+
     // Corrected SQL query with ORDER BY before LIMIT and OFFSET
     const [response] = await db.query(
         `SELECT * FROM user ORDER BY id ${order} LIMIT ? OFFSET ?`, 
@@ -18,6 +19,23 @@ const selectAllUsers = async (page, limit, order) => {
     );
 
     // Return array of users if any exist, otherwise null
+    return response.length > 0 ? response : null;
+}
+
+/**
+ * Get all users from the database without pagination
+ * @returns {Promise<Array|null>} Array of all user objects if found, null if no users exist
+ * @description Retrieves all user records from database at once - use with caution for large datasets
+ * @example
+ * const users = await selectAllUsers();
+ * if (users) {
+ *   // Process users array
+ * } else {
+ *   // Handle no users case
+ * }
+ */
+const selectAllUsers = async () => {
+    const [response] = await db.query('SELECT * FROM user');
     return response.length > 0 ? response : null;
 }
 
@@ -93,8 +111,9 @@ const deleteUserById = async (id) => {
 } 
 
 module.exports = { 
-    selectAllUsers, 
+    selectAllUsersByPagination, 
     selectUserById,
     updateUserById,
-    deleteUserById
+    deleteUserById,
+    selectAllUsers
 };

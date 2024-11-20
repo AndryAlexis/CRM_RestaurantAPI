@@ -4,7 +4,7 @@
 ############### ADMIN USER ###############
 
 ### Get all users
-GET {{host}}/api/admin/user?order=asc&page=1&limit=10
+GET {{host}}/api/admin/user/?limit=4
 Authorization: {{tokenAdmin}}
 
 ### Get a user info

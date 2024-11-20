@@ -8,7 +8,7 @@ const db = require('../../../config/db');
  * @param {number} [rating] - Optional rating filter (1-5)
  * @returns {Promise<Array>} Array of review objects, empty array if no results
  */
-const selectReviews = async (page, limit, order, rating) => {
+const selectReviewsByPagination = async (page, limit, order, rating) => {
     // Calculate offset based on page number and limit
     const offset = (page - 1) * limit;
 
@@ -32,6 +32,26 @@ const selectReviews = async (page, limit, order, rating) => {
     // Return results array or null if no results found
     return result.length > 0 ? result : null;
 };
+
+/**
+ * Get all reviews from the database
+ * @returns {Promise<Array|null>} Array of all review objects if found, null if no reviews exist
+ * @description Retrieves all review records from the database at once - use with caution for large datasets
+ * @example
+ * const reviews = await selectAllReviews();
+ * if (reviews) {
+ *   // Process reviews array
+ * } else {
+ *   // Handle no reviews case
+ * }
+ */
+const selectAllReviews = async () => {
+    // Execute query to select all reviews from the review table
+    const [response] = await db.query('SELECT * FROM review');
+    
+    // Return array of reviews if any exist, otherwise null
+    return response.length > 0 ? response : null;
+}
 
 /**
  * Get a review by ID from the database
@@ -90,9 +110,10 @@ const deleteReviewById = async (id) => {
 };
 
 module.exports = {
-    selectReviews,
+    selectReviewsByPagination,
     selectReviewById,
     updateReviewById,
-    deleteReviewById
+    deleteReviewById,
+    selectAllReviews
 };
 

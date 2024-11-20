@@ -1,8 +1,9 @@
 const { 
-    selectAllUsers, 
+    selectAllUsersByPagination, 
     selectUserById, 
     updateUserById, 
-    deleteUserById 
+    deleteUserById,
+    selectAllUsers
 } = require('../../../models/api/admin/admin.user.models');
 const { 
     BadRequestError, 
@@ -32,8 +33,14 @@ const getUsers = async (req, res, next) => {
             return next(new NotFoundError('User does not exist'));
         }
 
+        // Get all users from database
+        const allUsers = await selectAllUsers();
+        if (allUsers.length === 0) {
+            return next(new NotFoundError('No users found'));
+        }
+
         // Extract and validate query parameters
-        let { page = 1, limit = 10, order = 'asc' } = req.query;
+        let { page = 1, limit = allUsers.length, order = 'asc' } = req.query;
 
         // Validate numeric parameters
         if (!isNumber(page) || !isNumber(limit)) {
@@ -44,7 +51,7 @@ const getUsers = async (req, res, next) => {
         page = parseInt(page);
         limit = parseInt(limit);
 
-        
+        // Validate page and limit are positive numbers
         if (page < 1 || limit < 1) {
             return next(new BadRequestError('Page and limit must be positive numbers'));
         }
@@ -55,14 +62,20 @@ const getUsers = async (req, res, next) => {
         }
 
         // Fetch users with pagination
-        const users = await selectAllUsers(page, limit, order);
+        const users = await selectAllUsersByPagination(page, limit, order);
 
         // Return paginated response
         return res.status(httpCodes.OK).json({
             status: httpCodes.OK,
             title: httpStatus[httpCodes.OK],
             message: 'Users fetched successfully',
-            data: users
+            data: {
+                totalPages: Math.ceil(allUsers.length / limit),
+                currentPage: page,
+                totalUsers: allUsers.length,
+                limit,
+                users
+            }
         });
     } catch (error) {
         next(error);
