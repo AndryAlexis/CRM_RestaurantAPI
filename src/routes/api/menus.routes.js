@@ -5,8 +5,8 @@ const { getById, getAll } = require('../../controllers/api/menus.controllers');
 
 
 
-router.get('/', getAll);
-router.get('/:menuId', getById);
+//router.get('/', getAll);
+//router.get('/:menuId', getById);
 
 
 module.exports = router;
