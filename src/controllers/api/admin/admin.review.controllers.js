@@ -1,8 +1,9 @@
 const { 
-    selectReviews, 
+    selectReviewsByPagination, 
     selectReviewById,
     updateReviewById,
-    deleteReviewById
+    deleteReviewById,
+    selectAllReviews
 } = require('../../../models/api/admin/admin.review.models');
 const { httpCodes, httpStatus } = require('../../../utils/serverStatus');
 const { NotFoundError, BadRequestError } = require('../../../errors/server.errors');
@@ -21,8 +22,13 @@ const getReviews = async (req, res, next) => {
             return next(new NotFoundError('User does not exist'));
         }
 
+        const allReviews = await selectAllReviews();
+        if (allReviews.length === 0) {
+            return next(new NotFoundError('No reviews found'));
+        }
+
         // Extract and validate query parameters
-        let { page = 1, limit = 10, order = 'asc', rating = -1 } = req.query;
+        let { page = 1, limit = allReviews.length, order = 'asc', rating = -1 } = req.query;
 
         // Validate numeric parameters
         if (!isNumber(page) || !isNumber(limit) || !isNumber(rating)) {
@@ -38,10 +44,10 @@ const getReviews = async (req, res, next) => {
         }
 
         // Fetch all reviews from database
-        const reviews = await selectReviews(page, limit, order, rating);
+        const reviews = await selectReviewsByPagination(page, limit, order, rating);
 
         // If no reviews found, pass NotFoundError to error handler
-        if (reviews.length === 0) {
+        if (!reviews) {
             return next(new NotFoundError('No reviews found'));
         }
 
@@ -50,7 +56,13 @@ const getReviews = async (req, res, next) => {
             status: httpCodes.OK,
             title: httpStatus[httpCodes.OK],
             message: 'Reviews fetched successfully',
-            data: reviews,
+            data: {
+                totalPages: Math.ceil(allReviews.length / limit),
+                currentPage: page,
+                totalReviews: allReviews.length,
+                limit,
+                reviews
+            },
         });
     } catch (error) {
         next(error);

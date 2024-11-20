@@ -13,7 +13,10 @@ const {
 } = require('../../../middlewares/auth');
 
 // Get all reviews
-router.get('/', getReviews);
+router.get(
+    '/', 
+    getReviews
+);
 
 // Get a review by ID
 router.get(
