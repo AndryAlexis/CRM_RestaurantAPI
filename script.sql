@@ -1,7 +1,3 @@
-DROP DATABASE IF EXISTS restaurant;
-CREATE DATABASE restaurant;
-USE restaurant;
-
 DROP TABLE IF EXISTS user;
 CREATE TABLE user (
     id INT PRIMARY KEY AUTO_INCREMENT,
@@ -37,7 +33,7 @@ DROP TABLE IF EXISTS `table`;
 CREATE TABLE `table` (
     id INT PRIMARY KEY AUTO_INCREMENT,
     location ENUM('outside', 'inside'), 
-    number INT NOT NULL UNIQUE,
+    number INT NOT NULL,
     capacity INT NOT NULL
 );
 
@@ -50,14 +46,13 @@ CREATE TABLE reservation_has_table (
     PRIMARY KEY(reservation_id, table_id),
 
     `date` DATE NOT NULL,
-    time ENUM('breakfast', 'lunch', 'dinner') NOT NULL,
-    UNIQUE (table_id, `date`, `time`)
+    time ENUM('breakfast', 'lunch', 'dinner') NOT NULL
 );
 
 DROP TABLE IF EXISTS dish;
 CREATE TABLE dish (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(255) NOT NULL UNIQUE,
+    name VARCHAR(255) NOT NULL,
     type ENUM("dessert"),
     description TEXT, 
     price DECIMAL(5,2) NOT NULL,
@@ -67,7 +62,7 @@ CREATE TABLE dish (
 DROP TABLE IF EXISTS menu;
 CREATE TABLE menu (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(100) UNIQUE, 
+    name VARCHAR(100), 
     price DECIMAL(5,2) NOT NULL,
     `date` DATE NOT NULL 
 );
@@ -86,7 +81,7 @@ CREATE TABLE menu_has_dish (
 DROP TABLE IF EXISTS category;
 CREATE TABLE category (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(100) NOT NULL UNIQUE, 
+    name VARCHAR(100) NOT NULL, 
     description TEXT,
     type ENUM('Allergen') 
 );

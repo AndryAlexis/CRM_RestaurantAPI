@@ -1,8 +1,9 @@
-@host = http://localhost:3000
+//@host = http://localhost:3000
+@host = https://crm-restaurantapi.onrender.com
 @token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTB9.kv-HoJpD67mASPnzgsow21P4JafMbnJVE3hmOLxkQ54
 
 ### // Get a menu with ID
-GET {{host}}/api/admin/menu/25
+GET {{host}}/api/admin/menu/29
 Authorization: {{token}}
 
 ### // Get all menus
