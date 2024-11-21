@@ -28,6 +28,12 @@ const selectReviewById = async (id) => {
     return result.length ? result[0] : null;
 };
 
+/**
+ * Get a single review by ID and user ID
+ * @param {number} id Review ID
+ * @param {number} user_id User ID
+ * @returns {Promise<Object|null>} Review object or null if not found
+ */
 const selectReviewByIdAndUserId = async (id, user_id) => {
     const [result] = await db.query(SQL_QUERIES.SELECT_BY_ID_AND_USER_ID, [id, user_id]);
     return result.length ? result[0] : null;
@@ -42,7 +48,7 @@ const insertReview = async (review) => {
     const { user_id, rating, comment } = review;
     const [result] = await db.query(SQL_QUERIES.INSERT, [user_id, rating, comment]);
 
-    return result.affectedRows ? result.insertId : null;
+    return result.affectedRows > 0 ? result.insertId : null;
 };
 
 /**

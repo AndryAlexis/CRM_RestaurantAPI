@@ -11,7 +11,7 @@ router.use('/menu', require('./api/admin/admin.menu.routes'));
 // router.use('/menus', require('./api/menu/menus.routes'));
 router.use('/user', require('./api/user.routes'));
 router.use('/reservations', require('./api/reservations.routes'));
-router.use('/tables', require('./api/tables.routes'))
+router.use('/tables', require('./api/tables.routes'));
 router.use('/review', require('./api/review.routes'));
 
 // Admin routes

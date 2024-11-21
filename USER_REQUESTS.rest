@@ -1,5 +1,5 @@
 @host = http://localhost:3000
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDB9.W4aqvh53FH9sBstAn6kDt0FOf4WIMWemFIpmaavsOus
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ODJ9.WG3WN6l1l36pUej9ZCjavqJcjOWDvkL0p8LsOtenoiE
 
 ### Client endpoints
 
@@ -12,11 +12,11 @@ POST {{host}}/api/user
 Content-Type: application/json
 
 {
-    "name": "Charlyyy",
-    "surname": "Reyes Garcia",
+    "name": "Noe",
+    "surname": "Mesa",
     "phone": "637398857",
     "password": "12345",
-    "email": "charlyyy@gmail.com"  
+    "email": "noe@gmail.com"  
 }
 
 ### Login user
@@ -24,7 +24,7 @@ POST {{host}}/api/user/login
 Content-Type: application/json
 
 {
-    "email": "charly@gmail.com",
+    "email": "andry.html@gmail.com",
     "password": "12345"
 }
 
@@ -36,7 +36,9 @@ Authorization: {{token}}
 {
     "name": "Alma Joel",
     "surname": "Reyes Garcia",
-    "phone": "637398857"
+    "phone": "637398857",
+    "email": "alma@gmail.com",
+    "password": "12345"
 }
 
 ### Delete a user

@@ -17,7 +17,6 @@ Authorization: {{token}}
 {
     "dishes":[
         1, 5, 15
-        
     ], 
     "date": "2024-11-21",
     "name": "menu viernes"
