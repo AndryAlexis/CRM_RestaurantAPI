@@ -1,5 +1,5 @@
-@host = http://localhost:3000
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ODJ9.WG3WN6l1l36pUej9ZCjavqJcjOWDvkL0p8LsOtenoiE
+@host = https://crm-restaurant.onrender.com
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDB9.W4aqvh53FH9sBstAn6kDt0FOf4WIMWemFIpmaavsOus
 
 ### Client endpoints
 

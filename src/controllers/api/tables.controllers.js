@@ -1,7 +1,7 @@
 const { selectReservationTableByDate } = require("../../models/api/reservation-has-table.models")
 const { selectAll } = require("../../models/api/tables.models")
 
-const getAvailableByDate = async (req, res, next) => {
+const getAllAvailableByDate = async (req, res, next) => {
     const { date } = req.params
 
     try {
@@ -37,5 +37,5 @@ const getAvailableByDate = async (req, res, next) => {
 }
 
 module.exports = {
-    getAvailableByDate,
+    getAllAvailableByDate,
 }

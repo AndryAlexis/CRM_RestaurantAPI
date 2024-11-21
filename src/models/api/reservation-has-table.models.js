@@ -26,7 +26,21 @@ const selectReservationTableByDate = async (date) => {
     return reservationsWithTable
 }
 
+const selectByTableDateTime = async (table_id, date, time) => {
+    const [table] = await db.query(`
+        SELECT * FROM reservation_has_table WHERE table_id = ? AND date = ? AND  time = ?`
+        , [table_id, date, time])
+
+    console.log("dentro:", table, table_id, date, time)
+    if (table.length)
+        return true
+
+    return false
+}
+
+
 module.exports = {
     insertReservationTable,
     selectReservationTableByDate,
+    selectByTableDateTime
 }

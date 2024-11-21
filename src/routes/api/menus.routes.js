@@ -1,12 +1,12 @@
-const express = require('express');
 const router = require('express').Router();
 
-const { getById, getAll } = require('../../controllers/api/menus.controllers');
+const getDailyMenu = require('../../controllers/api/menus.controllers');
 
 
 
-router.get('/', getAll);
-router.get('/:menuId', getById);
+//router.get('/', getAll);
+//router.get('/:menuId', getById);
 
+router.get('/', getDailyMenu);
 
 module.exports = router;

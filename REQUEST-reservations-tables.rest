@@ -14,16 +14,19 @@ POST {{host}}/api/reservations
 Content-Type: application/json
 
 {
-    "date": "2025-08-10",
-    "time": "lunch",
+    "date": "2025-08-18",
+    "time": "breakfast",
     "guests": 5,
     "status": "pending",
     "user_id": 1,
-    "tables": [2, 3]
+    "location": "inside"
 }
 
 ### Delete by id
 DELETE {{host}}/api/reservations/SSAD
+
+### Update status by id 
+PUT {{host}}/api/reservations/1/status/confirmed3e
 
 #################### TABLES ####################
 
