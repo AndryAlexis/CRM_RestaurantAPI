@@ -21,8 +21,6 @@ router.delete(
     '/:menuId', deleteMenu
 )
 
-
-
 router.post('/', generateMenu);
 
 

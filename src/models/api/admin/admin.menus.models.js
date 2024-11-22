@@ -53,10 +53,10 @@ const selectAll = async (page, limit, order) => {
     return menusWithDishes;
 }
 
-const createMenu = async (date, name, dishes) => {
+const createMenu = async (date, name, dishes, price) => {
     // Step 1: Insert the new menu into the 'menu' table with the provided 'date' and 'name'.
     // The query returns the result object containing the menu's inserted ID.
-    const [result] = await db.query('INSERT INTO menu (date, name) VALUES (?, ?)', [date, name]);
+    const [result] = await db.query('INSERT INTO menu (date, name, price) VALUES (?, ?, ?)', [date, name, price]);
     // Step 2: Retrieve the 'insertId' of the newly created menu, which is the unique ID of the menu.
     const menuId = result.insertId;
     // Step 3: Iterate over each dish ID in the 'dishes' array and create a link between the new menu and the dishes.

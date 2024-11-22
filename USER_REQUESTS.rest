@@ -1,6 +1,5 @@
-@host = https://crm-restaurant.onrender.com
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDB9.W4aqvh53FH9sBstAn6kDt0FOf4WIMWemFIpmaavsOus
-
+@host = http://localhost:3000
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ODR9.-Ij-td4xh9QaU1IfH76IkuO0UNHVpbYxBVcYecdkkRE
 ### Client endpoints
 
 ### Get user profile
@@ -16,7 +15,7 @@ Content-Type: application/json
     "surname": "Mesa",
     "phone": "637398857",
     "password": "12345",
-    "email": "noe@gmail.com"  
+    "email": "andry.html@gmail.com"  
 }
 
 ### Login user

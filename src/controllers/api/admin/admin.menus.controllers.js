@@ -83,12 +83,12 @@ const getAll = async (req, res, next) => {
 }
 
 const generateMenu = async (req, res, next) => {
-    // Step 1: Extract the necessary data (date, name, dishes) from the request body.
-    const { date, name, dishes } = req.body;
+    // Step 1: Extract the necessary data (date, name, price) from the request body.
+    const { date, name, price, dishes } = req.body;
 
     try {
         // Step 2: Attempt to create a new menu by calling the 'createMenu' function.
-        const newMenu = await createMenu(date, name, dishes);
+        const newMenu = await createMenu(date, name, dishes, price);
         // Step 3: Check if the menu creation was unsuccessful (i.e., 'newMenu' is falsy or 0).
         // This is a basic validation check; if no menu is created, respond with an error.
         if (!newMenu === 0) {
