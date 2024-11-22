@@ -9,9 +9,9 @@ router.use(rateLimiter);
 // /api/
 router.use('/menu', require('./api/menus.routes'));
 router.use('/user', require('./api/user.routes'));
-router.use('/reservations', require('./api/reservations.routes'));
-router.use('/tables', require('./api/tables.routes'));
+router.use('/tables', require('./api/tables.routes'))
 router.use('/review', require('./api/review.routes'));
+router.use('/reservations', require('./api/reservations.routes'));
 
 // Admin routes
 // 1. Verify JWT token is present and valid

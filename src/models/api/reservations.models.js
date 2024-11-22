@@ -13,9 +13,12 @@ const selectById = async (id) => {
 const selectByParams = async (params) => {
     keys = Object.keys(params)
     values = Object.values(params)
-    let queryString = "SELECT * FROM reservation WHERE"
+    let queryString = "SELECT * FROM reservation"
 
     keys.forEach((key, index) => {
+        if (index == 0)
+            queryString += " WHERE"
+
         queryString += ` ${key} = ? `
 
         if (index != keys.length - 1)

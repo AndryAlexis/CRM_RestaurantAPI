@@ -6,6 +6,9 @@ GET {{host}}/api/reservations
 ### Get all with optional params
 GET {{host}}/api/reservations?date=2024-11-19&user_id=1&status=pending
 
+### Get all customers reservations with optional params
+GET {{host}}/api/reservations/customer?date=2024-11-25
+
 ### Get by id
 GET {{host}}/api/reservations/1
 
@@ -26,7 +29,7 @@ Content-Type: application/json
 DELETE {{host}}/api/reservations/SSAD
 
 ### Update status by id 
-PUT {{host}}/api/reservations/1/status/confirmed3e
+PUT {{host}}/api/reservations/1/status/confirmed
 
 #################### TABLES ####################
 
