@@ -1,5 +1,11 @@
+<<<<<<< HEAD
 @host = http://localhost:3000
 @token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ODR9.-Ij-td4xh9QaU1IfH76IkuO0UNHVpbYxBVcYecdkkRE
+=======
+@host = https://crm-restaurant.onrender.com
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTB9.kv-HoJpD67mASPnzgsow21P4JafMbnJVE3hmOLxkQ54
+
+>>>>>>> 234b44e51caecb541c35049082c39e21a2baa779
 ### Client endpoints
 
 ### Get user profile
@@ -11,11 +17,11 @@ POST {{host}}/api/user
 Content-Type: application/json
 
 {
-    "name": "Noe",
-    "surname": "Mesa",
+    "name": "noeliaaaaaaaaaaa",
+    "surname": "la mejorrrrrrrrr",
     "phone": "637398857",
-    "password": "12345",
-    "email": "andry.html@gmail.com"  
+    "password": "123456",
+    "email": "noemesa93fffffff@gmail.com"
 }
 
 ### Login user
@@ -23,8 +29,8 @@ POST {{host}}/api/user/login
 Content-Type: application/json
 
 {
-    "email": "andry.html@gmail.com",
-    "password": "12345"
+    "email": "noemesa93fffffff@gmail.com",
+    "password": "123456"
 }
 
 ### Update a user

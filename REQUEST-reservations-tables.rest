@@ -1,5 +1,5 @@
-@host = http://localhost:3000
-
+//@host = http://localhost:3000
+@host = https://crm-restaurant.onrender.com
 ### Get all
 GET {{host}}/api/reservations
 
@@ -16,7 +16,7 @@ Content-Type: application/json
 {
     "date": "2025-08-18",
     "time": "breakfast",
-    "guests": 5,
+    "guests": 1,
     "status": "pending",
     "user_id": 1,
     "location": "inside"

@@ -1,5 +1,7 @@
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
+const nodemailer = require("nodemailer");
+
 
 /**
  * Generates a JWT token with the provided payload
@@ -79,12 +81,38 @@ const isNumber = (value) => {
     return !isNaN(value);
 }
 
-module.exports = { 
-    generateToken, 
-    verifyToken, 
-    hasKeys, 
+
+const sendEmail = (email, reservationDetails) => {
+
+    const transporter = nodemailer.createTransport({
+        host: "smtp.ethereal.email",
+        port: 587,
+        secure: false, // true for port 465, false for other ports
+        auth: {
+            user: "carloslb1986@gmail.com",
+            pass: "123456",
+        },
+    });
+    async function main() {
+        // send mail with defined transport object
+        const info = await transporter.sendMail({
+            from: '"Carlos" <carloslb1986@gmail.com>', // sender address
+            to: email, // list of receivers
+            subject: "Reservation confirmation", // Subject line
+            text: `Hello, your reservation is confirmed!\nDate: ${reservationDetails.date}\nTime: ${reservationDetails.time}\nGuests: ${reservationDetails.guests}`,
+            html: `<b>Hello, your reservation is confirmed!</b><br>Date: ${reservationDetails.date}<br>Time: ${reservationDetails.time}<br>Guests: ${reservationDetails.guests}`
+        });
+    }
+    main().catch(console.error);
+}
+
+module.exports = {
+    generateToken,
+    verifyToken,
+    hasKeys,
     hasAtLeastOneKey,
-    isStringLengthValid, 
+    isStringLengthValid,
     removeSpaces,
-    isNumber
+    isNumber,
+    sendEmail
 };
