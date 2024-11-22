@@ -1,6 +1,8 @@
 const { insertReservationTable, selectByTableDateTime } = require("../../models/api/reservation-has-table.models")
 const { selectAll, selectByParams, selectById, insertReservation, deleteById, updateStatusById } = require("../../models/api/reservations.models")
 const { selectByNumber: selectTableByNumber, selectByLocation } = require("../../models/api/tables.models")
+const { getUserById } = require("../../models/api/user.models")
+const { sendEmail } = require("../../utils/helpers")
 
 const getAll = async (req, res, next) => {
 
@@ -77,6 +79,9 @@ const createByLocation = async (req, res, next) => {
         reservationId = await insertReservation(date, time, guests, status, user_id)
         await Promise.all(selectedTables.map(table =>
             insertReservationTable(reservationId, date, time, table.id)))
+        const user = await getUserById(id)
+        const userEmail = user.email
+        sendEmail(userEmail)
 
         res.status(200).json({
             message: "Reservation succesful",

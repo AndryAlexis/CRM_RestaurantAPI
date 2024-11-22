@@ -1,5 +1,5 @@
 //@host = http://localhost:3000
-@host = https://crm-restaurantapi.onrender.com
+@host = https://crm-restaurant.onrender.com
 @token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTB9.kv-HoJpD67mASPnzgsow21P4JafMbnJVE3hmOLxkQ54
 
 ### // Get a menu with ID
@@ -18,10 +18,9 @@ Authorization: {{token}}
 {
     "dishes":[
         1, 5, 15
-        
     ], 
-    "date": "2024-11-21",
-    "name": "menu viernes"
+    "date": "2024-11-24",
+    "name": "menu jueves"
     }
 
 ###  // Delete a menu with his ID

@@ -1,5 +1,5 @@
 @host = https://crm-restaurant.onrender.com
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDB9.W4aqvh53FH9sBstAn6kDt0FOf4WIMWemFIpmaavsOus
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTB9.kv-HoJpD67mASPnzgsow21P4JafMbnJVE3hmOLxkQ54
 
 ### Client endpoints
 
@@ -12,11 +12,11 @@ POST {{host}}/api/user
 Content-Type: application/json
 
 {
-    "name": "Charlyyy",
-    "surname": "Reyes Garcia",
+    "name": "noeliaaaaaaaaaaa",
+    "surname": "la mejorrrrrrrrr",
     "phone": "637398857",
-    "password": "12345",
-    "email": "charlyyy@gmail.com"  
+    "password": "123456",
+    "email": "noemesa93fffffff@gmail.com"
 }
 
 ### Login user
@@ -24,8 +24,8 @@ POST {{host}}/api/user/login
 Content-Type: application/json
 
 {
-    "email": "charly@gmail.com",
-    "password": "12345"
+    "email": "noemesa93fffffff@gmail.com",
+    "password": "123456"
 }
 
 ### Update a user
