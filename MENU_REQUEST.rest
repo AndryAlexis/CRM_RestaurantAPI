@@ -1,4 +1,4 @@
-//@host = http://localhost:3000
-@host = https://crm-restaurant.onrender.com
+@host = http://localhost:3000
+//@host = https://crm-restaurant.onrender.com
 ###
 GET {{host}}/api/menu?date=2024-12-23
