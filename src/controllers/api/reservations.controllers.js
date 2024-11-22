@@ -79,7 +79,7 @@ const createByLocation = async (req, res, next) => {
         reservationId = await insertReservation(date, time, guests, status, user_id)
         await Promise.all(selectedTables.map(table =>
             insertReservationTable(reservationId, date, time, table.id)))
-        const user = await getUserById(id)
+        const user = await getUserById(user_id)
         const userEmail = user.email
         sendEmail(userEmail)
 
