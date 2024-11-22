@@ -5,6 +5,12 @@ const selectAll = async () => {
     return tables
 }
 
+const selectTableById = async (id) => {
+    const [[table]] = await db.query('SELECT * FROM `table` WHERE id = ?',
+        [id])
+    return table
+}
+
 
 const selectByNumber = async (number) => {
     const [[table]] = await db.query('SELECT * FROM `table` WHERE number = ?', [number])
@@ -16,9 +22,17 @@ const selectByLocation = async (location) => {
     return table
 }
 
+const selectTableNumberById = async (id) => {
+    const [[number]] = await db.query('SELECT number FROM `table` WHERE id = ?', [id])
+
+    return number
+}
+
 module.exports = {
     selectAll,
     selectByNumber,
-    selectByLocation
+    selectByLocation,
+    selectTableById,
+    selectTableNumberById,
 }
 

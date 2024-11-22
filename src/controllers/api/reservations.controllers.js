@@ -1,31 +1,23 @@
-const { insertReservationTable, selectByTableDateTime } = require("../../models/api/reservation-has-table.models")
+const { insertReservationTable, selectByTableDateTime, selectDistinctReservationId, selectTablesByReservationId } = require("../../models/api/reservation-has-table.models")
 const { selectAll, selectByParams, selectById, insertReservation, deleteById, updateStatusById } = require("../../models/api/reservations.models")
-const { selectByNumber: selectTableByNumber, selectByLocation } = require("../../models/api/tables.models")
+const { selectByNumber: selectTableByNumber, selectByLocation, selectTableById, selectTableNumberById } = require("../../models/api/tables.models")
+const { getUserById } = require("../../models/api/user.models")
+const { hasKeys } = require("../../utils/helpers")
 
 const getAll = async (req, res, next) => {
-
-    paramsArray = Object.entries(req.query)
+    const paramsArray = Object.entries(req.query)
+    let paramsObect = {}
 
     // Optional parameters
     if (paramsArray.length) {
-
-        validParams = new Set(['date', 'time', 'guests', 'status', 'user_id'])
-        filteredParams = paramsArray
-            .filter(param => validParams.has(param[0]))
+        const validParams = new Set(['id', 'date', 'time', 'guests', 'status', 'user_id'])
+        const filteredParams = paramsArray.filter(param => validParams.has(param[0]))
         paramsObect = Object.fromEntries(filteredParams)
-
-        try {
-            reservations = await selectByParams(paramsObect)
-            return res.json(reservations)
-
-        } catch (err) {
-            next(err)
-        }
     }
 
-    // All if no params
+    // All if no params (paramsObject empty)
     try {
-        reservations = await selectAll();
+        let reservations = await selectByParams(paramsObect);
         res.json(reservations);
 
     } catch (err) {
@@ -50,8 +42,14 @@ const getById = async (req, res, next) => {
 }
 
 const createByLocation = async (req, res, next) => {
+
+    // Comprobar que el body tenga las propiedades obligatorias
+    if (!hasKeys(req.body, ['date', 'time', 'guests', 'status', 'user_id', 'location']))
+        return res.status(400).json({ message: "Invalid body data" })
+
     const { date, time, guests, status, user_id, location } = req.body
     let reservationId;
+
 
     try {
         const tables = await selectByLocation(location)
@@ -187,11 +185,51 @@ const setReservationStatusById = async (req, res, next) => {
     }
 }
 
+// Similar a getAll, la diferencia es que la respuesta incluye informacion del user
+// y ademas los numero de tablas asociadas a esa reserva.
+const getAllCustomerReservations = async (req, res, next) => {
+    paramsArray = Object.entries(req.query)
+    let paramsObect = {} 
+
+    // Optional parameters
+    if (paramsArray.length) {
+        validParams = new Set(['id', 'date', 'time', 'guests', 'status', 'user_id'])
+        filteredParams = paramsArray
+            .filter(param => validParams.has(param[0]))
+        paramsObect = Object.fromEntries(filteredParams)
+    }
+
+    try {
+        let reservations = await selectByParams(paramsObect)
+
+        // Add user info and tables asociated
+        for (const reservation of reservations) {
+            const user = await getUserById(reservation.user_id)
+            const tablesId = await selectTablesByReservationId(reservation.id)
+            reservation.name = user?.name
+            reservation.surname = user?.surname
+            reservation.tables = []
+
+            for (const tableId of tablesId) {
+                const tableNum = await selectTableNumberById(tableId.table_id)
+                reservation.tables.push(tableNum.number)
+            }
+        }
+
+        return res.json(reservations)
+
+    } catch (err) {
+        next(err)
+    }
+
+}
+
 
 module.exports = {
     getAll,
     getById,
     deleteReservation,
     createByLocation,
-    setReservationStatusById
+    setReservationStatusById,
+    getAllCustomerReservations,
 }

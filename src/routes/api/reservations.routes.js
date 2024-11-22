@@ -1,7 +1,8 @@
-const { getAll, getById, deleteReservation, createByLocation, setReservationStatus, setReservationStatusById } = require('../../controllers/api/reservations.controllers')
+const { getAll, getById, deleteReservation, createByLocation, setReservationStatus, setReservationStatusById, getAllCustomerReservations } = require('../../controllers/api/reservations.controllers')
 const router = require('express').Router()
 
 router.get('/', getAll)
+router.get('/customer', getAllCustomerReservations)
 router.get('/:id', getById)
 
 router.post('/', createByLocation)
