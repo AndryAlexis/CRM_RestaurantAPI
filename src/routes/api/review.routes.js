@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const { 
-    getReviews, 
+    getUserReviews,
+    getAllReviews,
     create, 
     remove 
 } = require('../../controllers/api/review.controllers');
@@ -18,7 +19,13 @@ const {
 router.get('/', 
     hasToken,
     userExistsByTokenId,
-    getReviews
+    getUserReviews
+);
+
+// Get all reviews
+router.get(
+    '/all', 
+    getAllReviews
 );
 
 // Create a review

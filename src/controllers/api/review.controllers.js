@@ -1,9 +1,11 @@
 const { 
-    selectReviews, 
-    selectReviewById,
+    selectUserReviews, 
+    // selectReviewById,
+    selectAllReviews,
     insertReview, 
     deleteReview,
-    selectReviewByIdAndUserId
+    selectReviewByIdAndUserId,
+    selectReviewsByPagination
 } = require('../../models/api/review.models');
 const { BadRequestError, NotFoundError } = require('../../errors/client.errors');
 const { BadRequestError : BadServerRequestError } = require('../../errors/server.errors');
@@ -17,7 +19,7 @@ const { httpStatus, httpCodes } = require('../../utils/serverStatus');
  * @param {Function} next - Express next middleware function
  * @returns {Object} JSON response containing user's reviews
  */
-const getReviews = async (req, res, next) => {
+const getUserReviews = async (req, res, next) => {
     try {
         // Check if user exists based on middleware validation
         if (!req.userExistsById) {
@@ -28,7 +30,7 @@ const getReviews = async (req, res, next) => {
         const { id } = verifyToken(req.headers.authorization);
 
         // Get all reviews for this user from database
-        const reviews = await selectReviews(id);
+        const reviews = await selectUserReviews(id);
         if (!reviews) {
             return next(new NotFoundError('There are no reviews for this user'));
         }
@@ -45,27 +47,83 @@ const getReviews = async (req, res, next) => {
     }
 };
 
-const getReviewsByUserId = async (req, res, next) => {
+/**
+ * Get all reviews from the database and send them in the response
+ * @param {Request} req - Express request object (not used)
+ * @param {Response} res - Express response object used to send the reviews
+ * @param {NextFunction} next - Express next middleware function for error handling
+ * @returns {Promise<void>} - Returns void or passes to error handler
+ */
+const getAllReviews = async (req, res, next) => {
     try {
-        if (!req.userExistsById) {
-            return next(new NotFoundError('User does not exist'));
-        }
-        const review = await selectReviewById(req.params.id);
-
-        if (!review) {
-            return next(new NotFoundError('There are no reviews for this user'));
+        const allReviews = await selectAllReviews();
+        if (!allReviews) {
+            return next(new NotFoundError('No reviews found'));
         }
 
+        // Extract and validate query parameters
+        let { page = 1, limit = allReviews.length, order = 'asc', rating = -1 } = req.query;
+
+        // Validate numeric parameters
+        if (!isNumber(page) || !isNumber(limit) || !isNumber(rating)) {
+            return next(new BadRequestError('Page, limit and rating must be valid numbers'));
+        }
+
+        // Convert to integers
+        page = parseInt(page);
+        limit = parseInt(limit);
+        
+        if (page < 1 || limit < 1) {
+            return next(new BadRequestError('Page and limit must be positive numbers'));
+        }
+
+        // Fetch all reviews from database
+        const reviews = await selectReviewsByPagination(page, limit, order, rating);
+
+        // If no reviews found, pass NotFoundError to error handler
+        if (!reviews) {
+            return next(new NotFoundError('No reviews found'));
+        }
+
+        // Send successful response with reviews data
         res.status(httpCodes.OK).json({
             status: httpCodes.OK,
             title: httpStatus[httpCodes.OK],
             message: 'Reviews fetched successfully',
-            data: review
+            data: {
+                totalPages: Math.ceil(allReviews.length / limit),
+                currentPage: page,
+                totalReviews: allReviews.length,
+                limit,
+                reviews
+            },
         });
     } catch (error) {
         next(error);
     }
 };
+
+// const getReviewsByUserId = async (req, res, next) => {
+//     try {
+//         if (!req.userExistsById) {
+//             return next(new NotFoundError('User does not exist'));
+//         }
+//         const review = await selectReviewById(req.params.id);
+
+//         if (!review) {
+//             return next(new NotFoundError('There are no reviews for this user'));
+//         }
+
+//         res.status(httpCodes.OK).json({
+//             status: httpCodes.OK,
+//             title: httpStatus[httpCodes.OK],
+//             message: 'Reviews fetched successfully',
+//             data: review
+//         });
+//     } catch (error) {
+//         next(error);
+//     }
+// };
 
 /**
  * Creates a new review for the authenticated user
@@ -149,8 +207,9 @@ const remove = async (req, res, next) => {
 };
 
 module.exports = {
-    getReviews,
-    getReviewsByUserId,
+    getUserReviews,
+    getAllReviews,
+    // getReviewsByUserId,
     create,
     remove
 };

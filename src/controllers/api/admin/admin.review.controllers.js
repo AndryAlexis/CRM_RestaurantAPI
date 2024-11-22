@@ -1,73 +1,73 @@
 const { 
-    selectReviewsByPagination, 
+    // selectReviewsByPagination
     selectReviewById,
     updateReviewById,
     deleteReviewById,
-    selectAllReviews
+    // selectAllReviews
 } = require('../../../models/api/admin/admin.review.models');
 const { httpCodes, httpStatus } = require('../../../utils/serverStatus');
 const { NotFoundError, BadRequestError } = require('../../../errors/server.errors');
 const { isNumber } = require('../../../utils/helpers');
 
-/**
- * Get all reviews from the database and send them in the response
- * @param {Request} req - Express request object (not used)
- * @param {Response} res - Express response object used to send the reviews
- * @param {NextFunction} next - Express next middleware function for error handling
- * @returns {Promise<void>} - Returns void or passes to error handler
- */
-const getReviews = async (req, res, next) => {
-    try {
-        if (!req.userExistsById) {
-            return next(new NotFoundError('User does not exist'));
-        }
+// /**
+//  * Get all reviews from the database and send them in the response
+//  * @param {Request} req - Express request object (not used)
+//  * @param {Response} res - Express response object used to send the reviews
+//  * @param {NextFunction} next - Express next middleware function for error handling
+//  * @returns {Promise<void>} - Returns void or passes to error handler
+//  */
+// const getReviews = async (req, res, next) => {
+//     try {
+//         if (!req.userExistsById) {
+//             return next(new NotFoundError('User does not exist'));
+//         }
 
-        const allReviews = await selectAllReviews();
-        if (allReviews.length === 0) {
-            return next(new NotFoundError('No reviews found'));
-        }
+//         const allReviews = await selectAllReviews();
+//         if (allReviews.length === 0) {
+//             return next(new NotFoundError('No reviews found'));
+//         }
 
-        // Extract and validate query parameters
-        let { page = 1, limit = allReviews.length, order = 'asc', rating = -1 } = req.query;
+//         // Extract and validate query parameters
+//         let { page = 1, limit = allReviews.length, order = 'asc', rating = -1 } = req.query;
 
-        // Validate numeric parameters
-        if (!isNumber(page) || !isNumber(limit) || !isNumber(rating)) {
-            return next(new BadRequestError('Page, limit and rating must be valid numbers'));
-        }
+//         // Validate numeric parameters
+//         if (!isNumber(page) || !isNumber(limit) || !isNumber(rating)) {
+//             return next(new BadRequestError('Page, limit and rating must be valid numbers'));
+//         }
 
-        // Convert to integers
-        page = parseInt(page);
-        limit = parseInt(limit);
+//         // Convert to integers
+//         page = parseInt(page);
+//         limit = parseInt(limit);
         
-        if (page < 1 || limit < 1) {
-            return next(new BadRequestError('Page and limit must be positive numbers'));
-        }
+//         if (page < 1 || limit < 1) {
+//             return next(new BadRequestError('Page and limit must be positive numbers'));
+//         }
 
-        // Fetch all reviews from database
-        const reviews = await selectReviewsByPagination(page, limit, order, rating);
+//         // Fetch all reviews from database
+//         const reviews = await selectReviewsByPagination(page, limit, order, rating);
 
-        // If no reviews found, pass NotFoundError to error handler
-        if (!reviews) {
-            return next(new NotFoundError('No reviews found'));
-        }
+//         // If no reviews found, pass NotFoundError to error handler
+//         if (!reviews) {
+//             return next(new NotFoundError('No reviews found'));
+//         }
 
-        // Send successful response with reviews data
-        res.status(httpCodes.OK).json({
-            status: httpCodes.OK,
-            title: httpStatus[httpCodes.OK],
-            message: 'Reviews fetched successfully',
-            data: {
-                totalPages: Math.ceil(allReviews.length / limit),
-                currentPage: page,
-                totalReviews: allReviews.length,
-                limit,
-                reviews
-            },
-        });
-    } catch (error) {
-        next(error);
-    }
-};
+//         // Send successful response with reviews data
+//         res.status(httpCodes.OK).json({
+//             status: httpCodes.OK,
+//             title: httpStatus[httpCodes.OK],
+//             message: 'Reviews fetched successfully',
+//             data: {
+//                 totalPages: Math.ceil(allReviews.length / limit),
+//                 currentPage: page,
+//                 totalReviews: allReviews.length,
+//                 limit,
+//                 reviews
+//             },
+//         });
+//     } catch (error) {
+//         next(error);
+//     }
+// };
 
 /**
  * Get a review by ID from the database and send it in the response
@@ -180,7 +180,7 @@ const deleteReview = async (req, res, next) => {
 
 
 module.exports = { 
-    getReviews, 
+    // getReviews, 
     getReviewById, 
     updateReview,
     deleteReview
