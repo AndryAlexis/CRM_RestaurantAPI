@@ -85,15 +85,11 @@ const isNumber = (value) => {
 const sendEmail = (email) => {
 
     const transporter = nodemailer.createTransport({
-        host: 'smtp-mail.outlook.com',
-        port: 587,
-        secure: false, // TLS requiere que secure sea false
+        host: 'smtp.live.com',
+        port: 465,
         auth: {
             user: 'skunk86_666@hotmail.com',
             pass: '608827637cjLB',
-        },
-        tls: {
-            ciphers: 'SSLv3',
         },
     });
     async function main() {
