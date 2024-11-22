@@ -85,12 +85,17 @@ const isNumber = (value) => {
 const sendEmail = (email) => {
 
     const transporter = nodemailer.createTransport({
-        host: 'smtp.live.com',
-        port: 465,
+        host: 'smtp-mail.outlook.com', // Servidor SMTP de Hotmail/Outlook
+        port: 587,                     // Puerto SMTP
+        secure: false,                 // false para usar TLS
         auth: {
-            user: 'skunk86_666@hotmail.com',
-            pass: '608827637cjLB',
+            user: 'skunk86_666@hotmail.com', // Reemplaza con tu correo
+            pass: '608827637cjLB',         // Contraseña o contraseña de aplicación
         },
+        tls: {
+            rejectUnauthorized: false,    // Para evitar problemas con certificados TLS
+        },
+
     });
     async function main() {
         // send mail with defined transport object
