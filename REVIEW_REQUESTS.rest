@@ -1,5 +1,5 @@
-@host = https://crm-restaurant.onrender.com
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjF9.8V1LvGZLMR7N44EcVTGxJ7PYn2zJMeZ77YMFOx2QY3g
+@host = http://localhost:3000
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjF9.RfopwvQBbCp4QP3VGyYMR6CcjBKBlbhf2aIFIZFCLmU
 
 ### Reviews endpoints
 
@@ -10,7 +10,7 @@ Content-Type: application/json
 
 {
     "rating": 5,
-    "comment": "ME CAGO EN LA PUTA 2"
+    "comment": "ME CAGO EN LA PUTA8"
 }
 
 ### Get all user reviews
@@ -24,3 +24,8 @@ Authorization: {{token}}
 
 ### Get all reviews
 GET {{host}}/api/review/all
+
+
+
+### Test endpoint
+GET {{host}}/api/test

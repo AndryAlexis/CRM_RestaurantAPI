@@ -9,7 +9,7 @@ const {
 } = require('../../models/api/review.models');
 const { BadRequestError, NotFoundError } = require('../../errors/client.errors');
 const { BadRequestError : BadServerRequestError } = require('../../errors/server.errors');
-const { verifyToken } = require('../../utils/helpers');
+const { verifyToken, isNumber } = require('../../utils/helpers');
 const { httpStatus, httpCodes } = require('../../utils/serverStatus');
 
 /**
