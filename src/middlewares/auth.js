@@ -173,6 +173,8 @@ const removeSpacesOfBody = (keys = []) => {
                 req.body[key] = req.body[key].trim();
             }
         });
+
+        console.log(req.body);
         // Continue to next middleware
         next();
     }

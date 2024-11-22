@@ -36,7 +36,9 @@ Authorization: {{token}}
 {
     "name": "Alma Joel",
     "surname": "Reyes Garcia",
-    "phone": "637398857"
+    "phone": "637398857",
+    "email": "alma@gmail.com",
+    "password": "12345"
 }
 
 ### Delete a user

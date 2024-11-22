@@ -25,7 +25,7 @@ router.get('/',
 router.post('/', 
     hasToken,
     userExistsByTokenId,
-    removeSpacesOfBody,
+    removeSpacesOfBody(['comment']),
     hasRequiredBodyKeys(['rating', 'comment']),
     create
 );
