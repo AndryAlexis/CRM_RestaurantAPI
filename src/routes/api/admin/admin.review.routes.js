@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { 
-    getReviews, 
+    // getReviews, 
     getReviewById, 
     updateReview, 
     deleteReview 
@@ -13,10 +13,10 @@ const {
 } = require('../../../middlewares/auth');
 
 // Get all reviews
-router.get(
-    '/', 
-    getReviews
-);
+// router.get(
+//     '/', 
+//     getReviews
+// );
 
 // Get a review by ID
 router.get(

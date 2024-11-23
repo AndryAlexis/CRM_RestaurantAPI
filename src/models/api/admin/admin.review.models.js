@@ -1,57 +1,57 @@
 const db = require('../../../config/db');
 
-/**
- * Get all reviews with pagination, ordering and optional rating filter
- * @param {number} page - The page number to fetch (starts from 1)
- * @param {number} limit - Number of reviews per page 
- * @param {string} order - Sort order for id ('ASC' or 'DESC')
- * @param {number} [rating] - Optional rating filter (1-5)
- * @returns {Promise<Array>} Array of review objects, empty array if no results
- */
-const selectReviewsByPagination = async (page, limit, order, rating) => {
-    // Calculate offset based on page number and limit
-    const offset = (page - 1) * limit;
+// /**
+//  * Get all reviews with pagination, ordering and optional rating filter
+//  * @param {number} page - The page number to fetch (starts from 1)
+//  * @param {number} limit - Number of reviews per page 
+//  * @param {string} order - Sort order for id ('ASC' or 'DESC')
+//  * @param {number} [rating] - Optional rating filter (1-5)
+//  * @returns {Promise<Array>} Array of review objects, empty array if no results
+//  */
+// const selectReviewsByPagination = async (page, limit, order, rating) => {
+//     // Calculate offset based on page number and limit
+//     const offset = (page - 1) * limit;
 
-    // Build base query
-    let query = 'SELECT * FROM review';
-    const params = [];
+//     // Build base query
+//     let query = 'SELECT * FROM review';
+//     const params = [];
 
-    // Add rating filter if provided
-    if (rating !== -1) {
-        query += ' WHERE rating = ?';
-        params.push(rating);
-    }
+//     // Add rating filter if provided
+//     if (rating !== -1) {
+//         query += ' WHERE rating = ?';
+//         params.push(rating);
+//     }
 
-    // Add ordering and pagination
-    query += ` ORDER BY id ${order} LIMIT ? OFFSET ?`;
-    params.push(limit, offset);
+//     // Add ordering and pagination
+//     query += ` ORDER BY id ${order} LIMIT ? OFFSET ?`;
+//     params.push(limit, offset);
 
-    // Execute query with parameters
-    const [result] = await db.query(query, params);
+//     // Execute query with parameters
+//     const [result] = await db.query(query, params);
 
-    // Return results array or null if no results found
-    return result.length > 0 ? result : null;
-};
+//     // Return results array or null if no results found
+//     return result.length > 0 ? result : null;
+// };
 
-/**
- * Get all reviews from the database
- * @returns {Promise<Array|null>} Array of all review objects if found, null if no reviews exist
- * @description Retrieves all review records from the database at once - use with caution for large datasets
- * @example
- * const reviews = await selectAllReviews();
- * if (reviews) {
- *   // Process reviews array
- * } else {
- *   // Handle no reviews case
- * }
- */
-const selectAllReviews = async () => {
-    // Execute query to select all reviews from the review table
-    const [response] = await db.query('SELECT * FROM review');
+// /**
+//  * Get all reviews from the database
+//  * @returns {Promise<Array|null>} Array of all review objects if found, null if no reviews exist
+//  * @description Retrieves all review records from the database at once - use with caution for large datasets
+//  * @example
+//  * const reviews = await selectAllReviews();
+//  * if (reviews) {
+//  *   // Process reviews array
+//  * } else {
+//  *   // Handle no reviews case
+//  * }
+//  */
+// const selectAllReviews = async () => {
+//     // Execute query to select all reviews from the review table
+//     const [response] = await db.query('SELECT * FROM review');
     
-    // Return array of reviews if any exist, otherwise null
-    return response.length > 0 ? response : null;
-}
+//     // Return array of reviews if any exist, otherwise null
+//     return response.length > 0 ? response : null;
+// }
 
 /**
  * Get a review by ID from the database
@@ -110,10 +110,10 @@ const deleteReviewById = async (id) => {
 };
 
 module.exports = {
-    selectReviewsByPagination,
+    // selectReviewsByPagination,
     selectReviewById,
     updateReviewById,
     deleteReviewById,
-    selectAllReviews
+    // selectAllReviews
 };
 

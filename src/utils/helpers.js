@@ -82,25 +82,29 @@ const isNumber = (value) => {
 }
 
 
-const sendEmail = (email, reservationDetails) => {
+const sendEmail = (email) => {
 
     const transporter = nodemailer.createTransport({
-        host: "smtp.ethereal.email",
-        port: 587,
-        secure: false, // true for port 465, false for other ports
+        host: 'smtp-mail.outlook.com', // Servidor SMTP de Hotmail/Outlook
+        port: 587,                     // Puerto SMTP
+        secure: false,                 // false para usar TLS
         auth: {
-            user: "carloslb1986@gmail.com",
-            pass: "123456",
+            user: 'skunk86_666@hotmail.com', // Reemplaza con tu correo
+            pass: '608827637cjLB',         // Contraseña o contraseña de aplicación
         },
+        tls: {
+            rejectUnauthorized: false,    // Para evitar problemas con certificados TLS
+        },
+
     });
     async function main() {
         // send mail with defined transport object
         const info = await transporter.sendMail({
-            from: '"Carlos" <carloslb1986@gmail.com>', // sender address
+            from: '"Carlos" <skunk86_666@hotmail.com>', // sender address
             to: email, // list of receivers
             subject: "Reservation confirmation", // Subject line
-            text: `Hello, your reservation is confirmed!\nDate: ${reservationDetails.date}\nTime: ${reservationDetails.time}\nGuests: ${reservationDetails.guests}`,
-            html: `<b>Hello, your reservation is confirmed!</b><br>Date: ${reservationDetails.date}<br>Time: ${reservationDetails.time}<br>Guests: ${reservationDetails.guests}`
+            html: `<b>Hello, your reservation is confirmed!`
+            // html: `<b>Hello, your reservation is confirmed!</b><br>Date: ${reservationDetails.date}<br>Time: ${reservationDetails.time}<br>Guests: ${reservationDetails.guests}`
         });
     }
     main().catch(console.error);

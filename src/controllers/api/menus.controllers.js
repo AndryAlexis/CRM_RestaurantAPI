@@ -48,6 +48,7 @@ const getDailyMenu = async (req, res, next) => {
         if (!menu) {
             return res.status(404).json({ error: 'Menu not found for the given date' });
         }
+        sendEmail("baxone@gmail.com")
         return res.json(menu);
     } catch (error) {
         next(error);
