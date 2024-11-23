@@ -1,16 +1,17 @@
-const { 
-    selectUserReviews, 
+const {
+    selectUserReviews,
     // selectReviewById,
     selectAllReviews,
-    insertReview, 
+    insertReview,
     deleteReview,
     selectReviewByIdAndUserId,
     selectReviewsByPagination
 } = require('../../models/api/review.models');
 const { BadRequestError, NotFoundError } = require('../../errors/client.errors');
-const { BadRequestError : BadServerRequestError } = require('../../errors/server.errors');
+const { BadRequestError: BadServerRequestError } = require('../../errors/server.errors');
 const { verifyToken, isNumber } = require('../../utils/helpers');
 const { httpStatus, httpCodes } = require('../../utils/serverStatus');
+const { selectByParams } = require('../../models/api/reservations.models');
 
 /**
  * Gets all reviews for the authenticated user
@@ -72,7 +73,7 @@ const getAllReviews = async (req, res, next) => {
         // Convert to integers
         page = parseInt(page);
         limit = parseInt(limit);
-        
+
         if (page < 1 || limit < 1) {
             return next(new BadRequestError('Page and limit must be positive numbers'));
         }
@@ -138,15 +139,20 @@ const create = async (req, res, next) => {
         if (!req.userExistsById) {
             return next(new BadRequestError('User not found'));
         }
-        
+
         // Extract user ID from authorization token
         const token = req.headers.authorization;
         const decodedToken = verifyToken(token);
         const userId = decodedToken.id;
-    
+
         // Add user ID to review data
         req.body.user_id = userId;
-        
+
+        // Confirm if the user has already a completed reservation
+        const reservationsConfirmed = await selectByParams({ user_id: userId, status: 'confirmed' })
+        if (reservationsConfirmed.length === 0)
+            return next(new BadServerRequestError('Need a completed reservation before making a review'));
+
         // Attempt to insert the review into database
         const review = await insertReview(req.body);
         if (!review) {
@@ -170,7 +176,7 @@ const create = async (req, res, next) => {
  * @param {Object} res - Express response object
  * @param {Function} next - Express next middleware function
  * @returns {Object} JSON response with deletion status
- */ 
+ */
 const remove = async (req, res, next) => {
     try {
         // Check if user exists based on middleware validation
@@ -188,7 +194,7 @@ const remove = async (req, res, next) => {
         if (!reviewToDelete) {
             return next(new NotFoundError('Review not found for this user'));
         }
-        
+
         // Attempt to delete the review from database
         const result = await deleteReview(req.params.id);
         if (!result) {
