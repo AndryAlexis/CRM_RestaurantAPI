@@ -85,12 +85,17 @@ const deleteMenuById = async (id) => {
 
 const updateMenuById = async (id, menuData) => {
     try {
-        const { name, date } = menuData;
-        if (!name || !date) {
-            throw new Error('Name and date are required');
-        }
+        const { name, date, dishes } = menuData;
+
         const [result] = await db.query('UPDATE menu SET name = ?, date = ? WHERE id = ?', [name, date, id]);
         if (result.affectedRows > 0) {
+
+            await db.query('DELETE FROM menu_has_dish WHERE menu_id = ?', [id]);
+
+            for (const dish_id of dishes) {
+                await db.query('INSERT INTO menu_has_dish (menu_id, dish_id) VALUES (?, ?)', [id, dish_id]);
+            }
+
             return { id, name, date };
         }
         return null;

@@ -13,12 +13,6 @@ router.use('/reservations', require('./api/reservations.routes'));
 router.use('/tables', require('./api/tables.routes'));
 router.use('/review', require('./api/review.routes'));
 
-router.use('/test', (req, res) => {
-    res.json({
-        message: 'test'
-    });
-});
-
 // Admin routes
 // 1. Verify JWT token is present and valid
 // 2. Verify user exists by token ID
