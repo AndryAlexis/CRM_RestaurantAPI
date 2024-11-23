@@ -10,8 +10,8 @@ const nodemailer = require("nodemailer");
  * @param {string} payload.role - User role to encode in token
  * @returns {string} JWT token signed with the secret key from environment variables
  */
-const generateToken = ({ id }) => {
-    return jwt.sign({ id }, process.env.JWT_SECRET, { noTimestamp: true });
+const generateToken = ({ id, role }) => {
+    return jwt.sign({ id, role }, process.env.JWT_SECRET, { noTimestamp: true });
 }
 
 /**
