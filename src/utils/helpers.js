@@ -82,31 +82,29 @@ const isNumber = (value) => {
 }
 
 
-const sendEmail = (email) => {
-
+const sendEmail = (to, subject, text) => {
     const transporter = nodemailer.createTransport({
-        host: 'smtp-mail.outlook.com', // Servidor SMTP de Hotmail/Outlook
-        port: 587,                     // Puerto SMTP
-        secure: false,                 // false para usar TLS
+        host: 'smtp.gmail.com',
+        port: 465,
+        secure: true,
         auth: {
-            user: 'skunk86_666@hotmail.com', // Reemplaza con tu correo
-            pass: '608827637cjLB',         // Contraseña o contraseña de aplicación
+            user: process.env.GMAIL_USER,
+            pass: process.env.GMAIL_APP_PASS
         },
         tls: {
-            rejectUnauthorized: false,    // Para evitar problemas con certificados TLS
-        },
-
+            rejectUnauthorized: false
+        }
     });
-    async function main() {
-        // send mail with defined transport object
-        const info = await transporter.sendMail({
-            from: '"Carlos" <skunk86_666@hotmail.com>', // sender address
-            to: email, // list of receivers
-            subject: "Reservation confirmation", // Subject line
-            html: `<b>Hello, your reservation is confirmed!`
-            // html: `<b>Hello, your reservation is confirmed!</b><br>Date: ${reservationDetails.date}<br>Time: ${reservationDetails.time}<br>Guests: ${reservationDetails.guests}`
+
+    const main = async () => {    
+        await transporter.sendMail({
+            from: process.env.GMAIL_USER,
+            to,
+            subject,
+            text
         });
     }
+
     main().catch(console.error);
 }
 

@@ -4,7 +4,6 @@ const { selectByNumber: selectTableByNumber, selectByLocation, selectTableById, 
 const { getUserById } = require("../../models/api/user.models")
 const { hasKeys } = require("../../utils/helpers")
 const { sendEmail } = require("../../utils/helpers")
-
 const getAll = async (req, res, next) => {
     const paramsArray = Object.entries(req.query)
     let paramsObect = {}
@@ -78,7 +77,6 @@ const createByLocation = async (req, res, next) => {
             insertReservationTable(reservationId, date, time, table.id)))
         const user = await getUserById(user_id)
         const userEmail = user.email
-        sendEmail(userEmail)
 
         res.status(200).json({
             message: "Reservation succesful",
@@ -171,6 +169,29 @@ const deleteReservation = async (req, res, next) => {
 
 const setReservationStatusById = async (req, res, next) => {
     const { id, status } = req.params
+
+    // Send confirmation email if status is being set to confirmed
+    if (status === 'confirmed') {
+        // Get reservation details
+        const reservation = await selectById(id);
+        if (!reservation) {
+            return res.status(404).json({ 
+                message: "The reservation with the requested id does not exists" 
+            });
+        }
+
+        // Get user email and send confirmation
+        const user = await getUserById(reservation.user_id);
+        try {
+            sendEmail(
+            user.email,
+            "Reservation confirmed", 
+                "Your reservation has been confirmed"
+            );
+        } catch (err) {
+            return next(err)
+        }
+    }
 
     try {
         const result = await updateStatusById(id, status)

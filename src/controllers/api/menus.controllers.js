@@ -2,7 +2,6 @@ const { selectById, selectAll, createMenu, deleteMenuById, updateMenuById, obtai
 const { ConflictError, BadRequestError, LengthError, NotFoundError } = require('../../errors/client.errors');
 const { generateToken, verifyToken, isStringLengthValid } = require('../../utils/helpers');
 const { httpCodes, httpStatus } = require("../../utils/serverStatus");
-const { sendEmail } = require("../../utils/helpers")
 
 
 /**
@@ -41,6 +40,7 @@ const { sendEmail } = require("../../utils/helpers")
 const getDailyMenu = async (req, res, next) => {
     try {
         const { date } = req.query;
+        console.log(date)
         if (!date) {
             return res.status(400).json({ error: 'Date is required' })
         }
@@ -48,7 +48,6 @@ const getDailyMenu = async (req, res, next) => {
         if (!menu) {
             return res.status(404).json({ error: 'Menu not found for the given date' });
         }
-        sendEmail("baxone@gmail.com")
         return res.json(menu);
     } catch (error) {
         next(error);

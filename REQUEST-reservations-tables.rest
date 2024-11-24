@@ -30,6 +30,7 @@ DELETE {{host}}/api/reservations/SSAD
 
 ### Update status by id 
 PUT {{host}}/api/reservations/1/status/confirmed
+Content-Type: application/json
 
 #################### TABLES ####################
 
