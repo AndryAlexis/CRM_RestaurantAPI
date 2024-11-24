@@ -13,7 +13,6 @@ const getAllTables = async (req, res, next) => {
 }
 
 const removeTableById = async (req, res, next) => {
-    console.log('💥💥💥💥 COMO NO HAY ID')
     const { id } = req.params
 
     try {

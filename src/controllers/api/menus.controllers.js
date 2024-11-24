@@ -40,7 +40,6 @@ const { httpCodes, httpStatus } = require("../../utils/serverStatus");
 const getDailyMenu = async (req, res, next) => {
     try {
         const { date } = req.query;
-        console.log(date)
         if (!date) {
             return res.status(400).json({ error: 'Date is required' })
         }
