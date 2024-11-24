@@ -184,9 +184,9 @@ const setReservationStatusById = async (req, res, next) => {
         const user = await getUserById(reservation.user_id);
         try {
             sendEmail(
-            user.email,
-            "Reservation confirmed", 
-                "Your reservation has been confirmed"
+                user.email,
+                `¡Buenas noticias, ${user.name}!`, 
+                "Su reserva ha sido confirmada"
             );
         } catch (err) {
             return next(err)
