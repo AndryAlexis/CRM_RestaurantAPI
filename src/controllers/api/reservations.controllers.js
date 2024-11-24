@@ -48,8 +48,24 @@ const createByLocation = async (req, res, next) => {
         return res.status(400).json({ message: "Invalid body data" })
 
     const { date, time, guests, status, user_id, location } = req.body
-    let reservationId;
 
+    try {
+        const user = await getUserById(user_id)
+        if (!user)
+            return res.status(404).json({ message: "The user with the requested id does not exists" })
+
+        const userEmail = user.email
+        sendEmail(
+            userEmail, 
+            `¡Reserva recibida, ${user.name}!`, 
+            "En breve recibirá un correo con la confirmación de su reserva."
+        )
+    } catch (err) {
+        return next(err)
+    }
+
+    
+    let reservationId;
 
     try {
         const tables = await selectByLocation(location)
