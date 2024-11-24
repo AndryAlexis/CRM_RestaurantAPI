@@ -15,7 +15,7 @@ const { TooManyRequestsError } = require('../errors/client.errors');
  */
 const rateLimiter = rateLimit({
     windowMs: 60 * 1000, // 1 minute window
-    max: 50, // limit each IP to 50 requests per windowMs
+    max: 5000, // limit each IP to 5000 requests per windowMs
     message: 'Too many requests from this IP, please try again after a minute',
     handler: (_req, _res, next) => {
         // Use custom error handler to maintain consistent error responses
