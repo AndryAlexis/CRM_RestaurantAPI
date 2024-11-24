@@ -26,6 +26,17 @@ const selectReservationTableByDate = async (date) => {
     return reservationsWithTable
 }
 
+const selectFutureReservationTable = async (date) => {
+    const [reservationsWithTable] = await db.query(
+        `SELECT * FROM reservation_has_table
+        WHERE date BETWEEN ? AND '9999-12-31';
+        `,
+        [date]
+    )
+
+    return reservationsWithTable
+}
+
 const selectByTableDateTime = async (table_id, date, time) => {
     const [table] = await db.query(`
         SELECT * FROM reservation_has_table WHERE table_id = ? AND date = ? AND  time = ?`
@@ -52,4 +63,5 @@ module.exports = {
     selectReservationTableByDate,
     selectByTableDateTime,
     selectTablesByReservationId,
+    selectFutureReservationTable
 }

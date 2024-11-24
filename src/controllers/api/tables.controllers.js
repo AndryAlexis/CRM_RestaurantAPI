@@ -1,4 +1,4 @@
-const { selectReservationTableByDate } = require("../../models/api/reservation-has-table.models")
+const { selectReservationTableByDate, selectFutureReservationTable } = require("../../models/api/reservation-has-table.models")
 const { selectAll, selectTableById, deleteTableById: deleteTable, updateTableCapacityById, insertTable } = require("../../models/api/tables.models");
 const { hasKeys } = require("../../utils/helpers");
 
@@ -80,6 +80,17 @@ const createTable = async (req, res, next) => {
 
 }
 
+const getFutureTablesReserved = async (req, res, next) => {
+    const { date } = req.params
+
+    try {
+        const reservantionWithTables = await selectFutureReservationTable(date)
+        res.json(reservantionWithTables)
+    } catch (err) {
+        next(err)
+    }
+}
+
 
 const getAllAvailableByDate = async (req, res, next) => {
     const { date } = req.params
@@ -122,4 +133,5 @@ module.exports = {
     removeTableById,
     createTable,
     setTableCapacityById,
+    getFutureTablesReserved
 }
