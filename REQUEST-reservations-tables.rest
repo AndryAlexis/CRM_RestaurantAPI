@@ -4,10 +4,10 @@
 GET {{host}}/api/reservations
 
 ### Get all with optional params
-GET {{host}}/api/reservations?date=2024-11-19&user_id=1&status=pending
+GET {{host}}/api/reservations?date=2029-01-02
 
 ### Get all customers reservations with optional params
-GET {{host}}/api/reservations/customer?date=2024-11-25
+GET {{host}}/api/reservations/customer?date=2029-01-02
 
 ### Get by id
 GET {{host}}/api/reservations/1
@@ -17,7 +17,7 @@ POST {{host}}/api/reservations
 Content-Type: application/json
 
 {
-    "date": "2025-08-18",
+    "date": "2029-01-02",
     "time": "breakfast",
     "guests": 1,
     "status": "pending",
@@ -39,3 +39,19 @@ GET {{host}}/api/tables
 
 ### Get available tables
 GET {{host}}/api/tables/available/2024-04-01
+
+### Delete by id
+DELETE {{host}}/api/tables/1
+
+### Update capacity by id
+PUT {{host}}/api/tables/3/capacity/30
+
+### Create table 
+POST {{host}}/api/tables
+Content-Type: application/json
+
+{
+    "number": 24,
+    "location": "inside",
+    "capacity": 1
+}
