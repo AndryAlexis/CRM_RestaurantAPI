@@ -144,7 +144,7 @@ const createWithTables = async (req, res, next) => {
             return res.status(400).json({ message: "Invalid body data" })
 
         if (err.code === 'ER_DUP_ENTRY')
-            return res.status(409).json({ message: "Seleted tables are reserved" })
+            return res.status(409).json({ message: "Selected tables are reserved" })
 
         next(err)
     }
