@@ -11,7 +11,7 @@ const nodemailer = require("nodemailer");
  * @returns {string} JWT token signed with the secret key from environment variables
  */
 const generateToken = ({ id, role }) => {
-    return jwt.sign({ id, role }, process.env.JWT_SECRET, { noTimestamp: true });
+  return jwt.sign({ id, role }, process.env.JWT_SECRET, { noTimestamp: true });
 }
 
 /**
@@ -21,11 +21,11 @@ const generateToken = ({ id, role }) => {
  * @throws {JsonWebTokenError} If token is invalid or expired
  */
 const verifyToken = (token) => {
-    try {
-        return jwt.verify(token, process.env.JWT_SECRET);
-    } catch (error) {
-        return null;
-    }
+  try {
+    return jwt.verify(token, process.env.JWT_SECRET);
+  } catch (error) {
+    return null;
+  }
 }
 
 /**
@@ -37,11 +37,11 @@ const verifyToken = (token) => {
  *   - missingKeys {string[]}: array of keys that were not found in the object
  */
 const hasKeys = (obj, keys) => {
-    const missingKeys = keys.filter(key => !obj.hasOwnProperty(key));
-    return {
-        hasAllKeys: missingKeys.length === 0,
-        missingKeys
-    };
+  const missingKeys = keys.filter(key => !obj.hasOwnProperty(key));
+  return {
+    hasAllKeys: missingKeys.length === 0,
+    missingKeys
+  };
 }
 
 /**
@@ -53,11 +53,11 @@ const hasKeys = (obj, keys) => {
  *   - missingKeys {string[]}: array of keys that were not found in the object
  */
 const hasAtLeastOneKey = (obj, keys) => {
-    const missingKeys = keys.filter(key => !obj.hasOwnProperty(key));
-    return {
-        hasSomeKeys: missingKeys.length < keys.length,
-        missingKeys
-    };
+  const missingKeys = keys.filter(key => !obj.hasOwnProperty(key));
+  return {
+    hasSomeKeys: missingKeys.length < keys.length,
+    missingKeys
+  };
 }
 
 /**
@@ -67,41 +67,41 @@ const hasAtLeastOneKey = (obj, keys) => {
  * @returns {boolean} True if string length is within the limit, false otherwise
  */
 const isStringLengthValid = (str, maxLength) => {
-    return String(str.length) <= maxLength;
+  return String(str.length) <= maxLength;
 }
 
 // Remove spaces from end and start from a string
 const removeSpaces = (str) => {
-    const string = String(str);
-    return string.trim();
+  const string = String(str);
+  return string.trim();
 }
 
 // Check if a value is a number
 const isNumber = (value) => {
-    return !isNaN(value);
+  return !isNaN(value);
 }
 
 
 const sendEmail = (to, title, text) => {
-    const transporter = nodemailer.createTransport({
-        host: 'smtp.gmail.com',
-        port: 465,
-        secure: true,
-        auth: {
-            user: process.env.GMAIL_USER,
-            pass: process.env.GMAIL_APP_PASS
-        },
-        tls: {
-            rejectUnauthorized: false
-        }
-    });
+  const transporter = nodemailer.createTransport({
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true,
+    auth: {
+      user: process.env.GMAIL_USER,
+      pass: process.env.GMAIL_APP_PASS
+    },
+    tls: {
+      rejectUnauthorized: false
+    }
+  });
 
-    const main = async () => {    
-        await transporter.sendMail({
-            from: process.env.GMAIL_USER,
-            to,
-            subject: 'Frontend Feast',
-            html: `
+  const main = async () => {
+    await transporter.sendMail({
+      from: process.env.GMAIL_USER,
+      to,
+      subject: 'Frontend Feast',
+      html: `
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
   <head>
@@ -241,19 +241,19 @@ const sendEmail = (to, title, text) => {
 </html>
 
             `
-        });
-    }
+    });
+  }
 
-    main().catch(console.error);
+  main().catch(console.error);
 }
 
 module.exports = {
-    generateToken,
-    verifyToken,
-    hasKeys,
-    hasAtLeastOneKey,
-    isStringLengthValid,
-    removeSpaces,
-    isNumber,
-    sendEmail
+  generateToken,
+  verifyToken,
+  hasKeys,
+  hasAtLeastOneKey,
+  isStringLengthValid,
+  removeSpaces,
+  isNumber,
+  sendEmail
 };

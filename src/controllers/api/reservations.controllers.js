@@ -56,15 +56,15 @@ const createByLocation = async (req, res, next) => {
 
         const userEmail = user.email
         sendEmail(
-            userEmail, 
-            `¡Reserva recibida, ${user.name}!`, 
+            userEmail,
+            `¡Reserva recibida, ${user.name}!`,
             "En breve recibirá un correo con la confirmación de su reserva."
         )
     } catch (err) {
         return next(err)
     }
 
-    
+
     let reservationId;
 
     try {
@@ -191,8 +191,8 @@ const setReservationStatusById = async (req, res, next) => {
         // Get reservation details
         const reservation = await selectById(id);
         if (!reservation) {
-            return res.status(404).json({ 
-                message: "The reservation with the requested id does not exists" 
+            return res.status(404).json({
+                message: "The reservation with the requested id does not exists"
             });
         }
 
@@ -201,7 +201,7 @@ const setReservationStatusById = async (req, res, next) => {
         try {
             sendEmail(
                 user.email,
-                `¡Buenas noticias, ${user.name}!`, 
+                `¡Buenas noticias, ${user.name}!`,
                 "Su reserva ha sido confirmada"
             );
         } catch (err) {
@@ -230,7 +230,7 @@ const setReservationStatusById = async (req, res, next) => {
 // y ademas los numero de tablas asociadas a esa reserva.
 const getAllCustomerReservations = async (req, res, next) => {
     paramsArray = Object.entries(req.query)
-    let paramsObect = {} 
+    let paramsObect = {}
 
     // Optional parameters
     if (paramsArray.length) {
