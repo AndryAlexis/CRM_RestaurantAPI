@@ -149,7 +149,7 @@ const create = async (req, res, next) => {
         req.body.user_id = userId;
 
         // Confirm if the user has already a completed reservation
-        const reservationsConfirmed = await selectByParams({ user_id: userId, status: 'confirmed' })
+        const reservationsConfirmed = await selectByParams({ user_id: userId, status: 'completed' })
         if (reservationsConfirmed.length === 0)
             return next(new BadServerRequestError('Need a completed reservation before making a review'));
 
