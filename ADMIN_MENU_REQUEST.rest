@@ -1,5 +1,5 @@
-@host = http://localhost:3000
-# @host = https://crm-restaurantapi.onrender.com
+#@host = http://localhost:3000
+@host = https://crm-restaurantapi-z9vj.onrender.com
 @token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjF9.RfopwvQBbCp4QP3VGyYMR6CcjBKBlbhf2aIFIZFCLmU
 
 ### // Get a menu with ID
@@ -39,5 +39,5 @@ Content-Type: application/json
     ], 
     "date": "2024-11-21",
     "name": "Menu Alexis actualizado",
-    "price": 100
+    "price": 200
 }

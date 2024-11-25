@@ -18,7 +18,7 @@ router.get('/:menuId', getById);
 
 router.put(
     '/:menuId',
-    hasOptionalBodyKeys(['name', 'date', 'dishes']),
+    hasOptionalBodyKeys(['name', 'date', 'dishes', 'price']),
     updateById
 )
 

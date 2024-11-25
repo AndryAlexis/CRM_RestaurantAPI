@@ -85,9 +85,9 @@ const deleteMenuById = async (id) => {
 
 const updateMenuById = async (id, menuData) => {
     try {
-        const { name, date, dishes } = menuData;
+        const { name, date, dishes, price } = menuData;
 
-        const [result] = await db.query('UPDATE menu SET name = ?, date = ? WHERE id = ?', [name, date, id]);
+        const [result] = await db.query('UPDATE menu SET name = ?, date = ?, price = ? WHERE id = ?', [name, date, price, id]);
         if (result.affectedRows > 0) {
 
             await db.query('DELETE FROM menu_has_dish WHERE menu_id = ?', [id]);
@@ -96,7 +96,7 @@ const updateMenuById = async (id, menuData) => {
                 await db.query('INSERT INTO menu_has_dish (menu_id, dish_id) VALUES (?, ?)', [id, dish_id]);
             }
 
-            return { id, name, date };
+            return { id, name, date, price };
         }
         return null;
     } catch (error) {
