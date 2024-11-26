@@ -44,3 +44,71 @@ Authorization: {{token}}
 ### Delete a user
 DELETE {{host}}/api/user/26
 Authorization: {{token}}
+
+### Environment Variables
+@baseUrl = http://localhost:3000/api
+@contentType = application/json
+
+### Health Check
+GET {{baseUrl}}/health
+Content-Type: {{contentType}}
+
+### Example User Endpoints
+
+# Get all users
+GET {{baseUrl}}/users
+Content-Type: {{contentType}}
+
+# Get user by ID
+GET {{baseUrl}}/users/1
+Content-Type: {{contentType}}
+
+# Create new user
+POST {{baseUrl}}/users
+Content-Type: {{contentType}}
+
+{
+    "name": "John Doe",
+    "email": "john@example.com",
+    "password": "securepassword123"
+}
+
+# Update user
+PUT {{baseUrl}}/users/1
+Content-Type: {{contentType}}
+
+{
+    "name": "John Updated",
+    "email": "john.updated@example.com"
+}
+
+# Delete user
+DELETE {{baseUrl}}/users/1
+Content-Type: {{contentType}}
+
+### Example Authentication Endpoints
+
+# Login
+POST {{baseUrl}}/auth/login
+Content-Type: {{contentType}}
+
+{
+    "email": "john@example.com",
+    "password": "securepassword123"
+}
+
+# Register
+POST {{baseUrl}}/auth/register
+Content-Type: {{contentType}}
+
+{
+    "name": "New User",
+    "email": "newuser@example.com",
+    "password": "securepassword123"
+}
+
+### Notes:
+# This file can be used with REST Client VS Code extension
+# or similar tools like Postman
+# Replace the IDs and data according to your actual implementation
+# The @baseUrl variable should match your server configuration
