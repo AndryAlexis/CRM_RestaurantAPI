@@ -1,5 +1,5 @@
-@host = http://localhost:3000
-# @host = https://crm-restaurant.onrender.com
+#@host = http://localhost:3000
+@host = https://crm-restaurantapi-z9vj.onrender.com
 ### Get all
 GET {{host}}/api/reservations
 

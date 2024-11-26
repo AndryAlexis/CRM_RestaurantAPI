@@ -1,4 +1,5 @@
-@host = http://localhost:3000
+#@host = http://localhost:3000
+@host = https://crm-restaurantapi-z9vj.onrender.com
 @tokenAdmin = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjF9.RfopwvQBbCp4QP3VGyYMR6CcjBKBlbhf2aIFIZFCLmU
 
 ### Get all dishes
